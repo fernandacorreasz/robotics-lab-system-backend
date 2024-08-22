@@ -34,12 +34,17 @@ A aplicação está configurada para utilizar Spring Security com JWT para prote
 - Docker Compose
 
 ---
-**Como Construir e Rodar**
+
+### Como Construir e Rodar
 
 1. **Clone o repositório**:
-    
-    `git clone **https://github.com/fernandacorreasz/robotics-lab-system-backend.git**
-    cd **robotics-lab-system-backend**`
+    ```sh
+    git clone https://github.com/fernandacorreasz/robotics-lab-system-backend.git
+    cd robotics-lab-system-backend
+    ```
+
+---
+
 
  2.  **Construa e inicie os contêineres**:
     ```sh
