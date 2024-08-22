@@ -2,10 +2,6 @@
 [em desenvolvimento]
 Essa aplicação  é um sistema de  controle  desenvolvido de forma didática para praticas do desenvolvimento de software e como entrega de portfólio acadêmico.  Este sistema foi projetado com o propósito de simplificar o controle de equipamentos, atividades, gerenciamento  de um laboratório de robótica, está sendo desenvolvido em Java utilizando Spring Boot. A aplicação, o banco de dados e outros serviços necessários estão orquestrados utilizando Docker Compose.
 
-Para acessara  aplicação 
-
-Essa aplicação  é um sistema de  controle  desenvolvido de forma didática para praticas do desenvolvimento de software e como entrega de portfólio acadêmico.  Este sistema foi projetado com o propósito de simplificar o controle de equipamentos, atividades, gerenciamento  de um laboratório de robótica, está sendo desenvolvido em Java utilizando Spring Boot. A aplicação, o banco de dados e outros serviços necessários estão orquestrados utilizando Docker Compose.
-
 **Tecnologias Utilizadas:**
 
 - **Java**
