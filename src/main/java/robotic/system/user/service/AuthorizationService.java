@@ -1,4 +1,4 @@
-package robotic.system.user.app;
+package robotic.system.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import robotic.system.user.domain.UserRepository;
-import robotic.system.user.domain.Users;
+import robotic.system.user.domain.model.Users;
+import robotic.system.user.repository.UserRepository;
 
 
 @Service

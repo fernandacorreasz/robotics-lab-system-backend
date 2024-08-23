@@ -1,6 +1,8 @@
-package robotic.system.user.domain;
+package robotic.system.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import robotic.system.user.domain.model.Role;
 
 import java.util.UUID;
 
