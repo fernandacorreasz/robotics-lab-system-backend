@@ -9,32 +9,32 @@ import robotic.system.user.domain.dto.AuthenticationDTO;
 import robotic.system.user.domain.dto.LoginResponseDTO;
 import robotic.system.user.domain.dto.RegisterDTO;
 import robotic.system.user.domain.model.Users;
-import robotic.system.user.service.UserService;
+import robotic.system.user.service.AuthorizationService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth/")
 public class AuthenticationController {
     
     @Autowired
-    private UserService userService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO) {
         try {
-            userService.registerUser(registerDTO);
+            authorizationService.registerUser(registerDTO);
             return ResponseEntity.ok("Success: User registered successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationDTO authenticationDTO) {
         try {
-            Users user = userService.authenticateUser(authenticationDTO);
+            Users user = authorizationService.authenticateUser(authenticationDTO);
             String token = tokenService.generateToken(user);
             return ResponseEntity.ok(new LoginResponseDTO(token));
         } catch (IllegalArgumentException e) {

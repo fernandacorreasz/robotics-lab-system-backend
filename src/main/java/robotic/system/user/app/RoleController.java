@@ -8,13 +8,13 @@ import robotic.system.user.domain.model.Role;
 import robotic.system.user.service.RoleService;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/v1/roles/")
 public class RoleController {
 
     @Autowired
     private RoleService roleService;
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<?> createRole(@RequestBody Role role) {
         try {
             roleService.createRole(role);
@@ -24,7 +24,7 @@ public class RoleController {
         }
     }
 
-    @PostMapping("/assign")
+    @PostMapping("assign")
     public ResponseEntity<?> assignRoleToUser(@RequestParam String email, @RequestParam String roleName) {
         try {
             roleService.assignRoleToUser(email, roleName);
