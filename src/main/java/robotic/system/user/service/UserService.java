@@ -3,16 +3,12 @@ package robotic.system.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import robotic.system.user.domain.dto.UserDTO;
 import robotic.system.user.domain.model.Role;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.exception.UserNotFoundException;
-import robotic.system.user.repository.RoleRepository;
 import robotic.system.user.repository.UserRepository;
 
 import java.util.Set;
