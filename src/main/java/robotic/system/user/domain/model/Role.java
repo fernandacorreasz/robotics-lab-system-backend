@@ -46,7 +46,7 @@ public class Role {
             case "STUDENT":
                 return 1;
             default:
-                return 0; // Nenhum nível definido
+                return 0;
         }
     }
 }
