@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import robotic.system.user.domain.model.Role;
 import robotic.system.user.service.RoleService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/roles/")
 public class RoleController {

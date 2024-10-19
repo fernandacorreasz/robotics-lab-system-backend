@@ -36,4 +36,17 @@ public class Role {
         this.roleId = UUID.randomUUID().toString(); 
         this.nameRole = builder.nameRole;
     }
+
+    public int getPermissionLevel() {
+        switch (this.nameRole) {
+            case "ADMIN":
+                return 3;
+            case "LABORATORIST":
+                return 2;
+            case "STUDENT":
+                return 1;
+            default:
+                return 0; // Nenhum nível definido
+        }
+    }
 }

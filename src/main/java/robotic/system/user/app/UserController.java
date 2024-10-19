@@ -17,6 +17,7 @@ import robotic.system.user.service.UserService;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/user/")
 public class UserController {

@@ -8,9 +8,12 @@ import robotic.system.infra.security.TokenService;
 import robotic.system.user.domain.dto.AuthenticationDTO;
 import robotic.system.user.domain.dto.LoginResponseDTO;
 import robotic.system.user.domain.dto.RegisterDTO;
+import robotic.system.user.domain.model.Role;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.service.AuthorizationService;
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/auth/")
 public class AuthenticationController {
@@ -36,9 +39,17 @@ public class AuthenticationController {
         try {
             Users user = authorizationService.authenticateUser(authenticationDTO);
             String token = tokenService.generateToken(user);
-            return ResponseEntity.ok(new LoginResponseDTO(token));
+    
+            // Aqui obtemos o nível de permissão
+            int permissionLevel = user.getRoles().stream()
+                .mapToInt(Role::getPermissionLevel)
+                .max()
+                .orElse(0); // Caso não tenha papéis, define como 0
+    
+            return ResponseEntity.ok(new LoginResponseDTO(token, permissionLevel));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
+    
 }
