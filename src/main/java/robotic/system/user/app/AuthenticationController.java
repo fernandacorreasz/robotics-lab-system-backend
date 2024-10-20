@@ -33,23 +33,23 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
     @PostMapping("login")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationDTO authenticationDTO) {
         try {
             Users user = authorizationService.authenticateUser(authenticationDTO);
             String token = tokenService.generateToken(user);
     
-            // Aqui obtemos o nível de permissão
             int permissionLevel = user.getRoles().stream()
                 .mapToInt(Role::getPermissionLevel)
                 .max()
-                .orElse(0); // Caso não tenha papéis, define como 0
+                .orElse(0);
     
-            return ResponseEntity.ok(new LoginResponseDTO(token, permissionLevel));
+            return ResponseEntity.ok(new LoginResponseDTO(token, permissionLevel, user.getName()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
+    
     
 }
