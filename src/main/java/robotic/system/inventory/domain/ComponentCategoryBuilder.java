@@ -1,4 +1,4 @@
-package robotic.system.inventory.domain.model;
+package robotic.system.inventory.domain;
 
 public class ComponentCategoryBuilder {
     protected String categoryId;

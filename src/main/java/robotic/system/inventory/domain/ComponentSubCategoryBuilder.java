@@ -1,4 +1,4 @@
-package robotic.system.inventory.domain.model;
+package robotic.system.inventory.domain;
 
 import java.sql.Blob;
 
@@ -6,7 +6,6 @@ public class ComponentSubCategoryBuilder {
     protected String subCategoryId;
     protected Integer totalQuantity;
     protected String subCategoryName;
-    protected Blob subCategoryImage;
     protected ComponentCategory category;
 
     public ComponentSubCategoryBuilder() {}
@@ -23,11 +22,6 @@ public class ComponentSubCategoryBuilder {
 
     public ComponentSubCategoryBuilder withSubCategoryName(String subCategoryName) {
         this.subCategoryName = subCategoryName;
-        return this;
-    }
-
-    public ComponentSubCategoryBuilder withSubCategoryImage(Blob subCategoryImage) {
-        this.subCategoryImage = subCategoryImage;
         return this;
     }
 

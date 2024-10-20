@@ -1,6 +1,6 @@
 package robotic.system.loanComponent.domain.model;
 
-import robotic.system.inventory.domain.model.Component;
+import robotic.system.inventory.domain.Component;
 import robotic.system.user.domain.model.Users;
 
 import java.util.Date;

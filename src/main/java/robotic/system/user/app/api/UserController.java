@@ -1,4 +1,4 @@
-package robotic.system.user.app;
+package robotic.system.user.app.api;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import robotic.system.user.app.service.UserService;
 import robotic.system.user.domain.dto.UserDTO;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.exception.UserNotFoundException;
-import robotic.system.user.service.UserService;
 
 import java.util.List;
 import java.util.UUID;

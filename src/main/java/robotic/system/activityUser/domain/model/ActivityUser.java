@@ -4,7 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import robotic.system.inventory.domain.model.Component;
+import robotic.system.inventory.domain.Component;
 
 import java.util.Date;
 import java.util.List;

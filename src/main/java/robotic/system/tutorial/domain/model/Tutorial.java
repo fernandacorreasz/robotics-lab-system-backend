@@ -1,11 +1,11 @@
 package robotic.system.tutorial.domain.model;
 
 import org.hibernate.annotations.GenericGenerator;
-import robotic.system.inventory.domain.model.Component;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import robotic.system.inventory.domain.Component;
 
 import java.util.Set;
 import java.util.UUID;

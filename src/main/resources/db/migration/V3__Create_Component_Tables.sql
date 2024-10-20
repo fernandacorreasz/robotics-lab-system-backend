@@ -17,7 +17,6 @@ CREATE TABLE component_sub_category (
     sub_category_id VARCHAR(255) NOT NULL,
     total_quantity INTEGER NOT NULL,
     sub_category_name VARCHAR(255) NOT NULL,
-    sub_category_image BYTEA,
     category_id UUID,
     -- Audit and version control columns
     row_version SMALLINT NOT NULL DEFAULT 0,

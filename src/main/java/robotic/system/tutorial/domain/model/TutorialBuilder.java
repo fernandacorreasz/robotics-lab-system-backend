@@ -1,9 +1,9 @@
 package robotic.system.tutorial.domain.model;
 
-import robotic.system.inventory.domain.model.Component;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import robotic.system.inventory.domain.Component;
 
 public class TutorialBuilder {
     protected String tutorialId;

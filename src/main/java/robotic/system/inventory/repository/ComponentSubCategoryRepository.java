@@ -1,7 +1,8 @@
 package robotic.system.inventory.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import robotic.system.inventory.domain.model.ComponentSubCategory;
+
+import robotic.system.inventory.domain.ComponentSubCategory;
 
 import java.util.UUID;
 

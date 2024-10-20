@@ -1,4 +1,4 @@
-package robotic.system.inventory.domain.model;
+package robotic.system.inventory.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,10 +18,14 @@ public class ComponentCategory {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
+    @Column(nullable = false)
     private String categoryId;
+
+    @Column(nullable = false)
     private String categoryName;
 
     public ComponentCategory() {
+        this.categoryId = UUID.randomUUID().toString(); 
     }
 
     ComponentCategory(ComponentCategoryBuilder builder) {

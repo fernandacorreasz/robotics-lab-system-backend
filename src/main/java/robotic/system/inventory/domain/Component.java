@@ -1,4 +1,4 @@
-package robotic.system.inventory.domain.model;
+package robotic.system.inventory.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -33,10 +33,10 @@ public class Component {
     private ComponentCategory category;
     
     public Component() {
+        this.componentId = UUID.randomUUID().toString();
     }
 
     Component(ComponentBuilder builder) {
-        this.id = UUID.randomUUID();
         this.componentId = UUID.randomUUID().toString();
         this.name = builder.name;
         this.serialNumber = builder.serialNumber;

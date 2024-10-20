@@ -1,16 +1,16 @@
-package robotic.system.user.app;
+package robotic.system.user.app.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import robotic.system.infra.security.TokenService;
+import robotic.system.user.app.service.AuthorizationService;
 import robotic.system.user.domain.dto.AuthenticationDTO;
 import robotic.system.user.domain.dto.LoginResponseDTO;
 import robotic.system.user.domain.dto.RegisterDTO;
 import robotic.system.user.domain.model.Role;
 import robotic.system.user.domain.model.Users;
-import robotic.system.user.service.AuthorizationService;
 
 
 @CrossOrigin

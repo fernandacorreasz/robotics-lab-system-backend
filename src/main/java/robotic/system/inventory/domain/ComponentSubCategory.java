@@ -1,11 +1,10 @@
-package robotic.system.inventory.domain.model;
+package robotic.system.inventory.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.Blob;
 import java.util.UUID;
 
 @Getter
@@ -22,22 +21,19 @@ public class ComponentSubCategory {
     private Integer totalQuantity;
     private String subCategoryName;
 
-    @Lob
-    private Blob subCategoryImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private ComponentCategory category;
 
     public ComponentSubCategory() {
+        this.subCategoryId = UUID.randomUUID().toString(); 
     }
 
-    ComponentSubCategory(ComponentSubCategoryBuilder builder) {
-        this.id = UUID.randomUUID();
+    public ComponentSubCategory(ComponentSubCategoryBuilder builder) {
         this.subCategoryId = UUID.randomUUID().toString();
         this.totalQuantity = builder.totalQuantity;
         this.subCategoryName = builder.subCategoryName;
-        this.subCategoryImage = builder.subCategoryImage;
         this.category = builder.category;
     }
 }

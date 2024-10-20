@@ -1,11 +1,11 @@
-package robotic.system.user.app;
+package robotic.system.user.app.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import robotic.system.user.app.service.RoleService;
 import robotic.system.user.domain.model.Role;
-import robotic.system.user.service.RoleService;
 
 @CrossOrigin
 @RestController

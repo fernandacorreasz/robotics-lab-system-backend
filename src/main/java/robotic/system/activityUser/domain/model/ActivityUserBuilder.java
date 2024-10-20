@@ -3,7 +3,7 @@ package robotic.system.activityUser.domain.model;
 import java.util.Date;
 import java.util.List;
 
-import robotic.system.inventory.domain.model.Component;
+import robotic.system.inventory.domain.Component;
 
 public class ActivityUserBuilder {
     protected String activityTitle;
