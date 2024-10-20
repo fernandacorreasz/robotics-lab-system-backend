@@ -1,22 +1,21 @@
 package robotic.system.activityUser.app.api;
 
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import robotic.system.activityUser.domain.dto.ActivityUserDTO;
 import robotic.system.activityUser.domain.model.ActivityUser;
-import robotic.system.activityUser.repository.ActivityPhotoRepository;
 import robotic.system.activityUser.app.service.ActivityUserService;
-import robotic.system.activityUser.domain.model.ActivityPhoto;
+
 import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import java.util.List;
-import java.util.ArrayList;
+
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -25,9 +24,6 @@ public class ActivityUserController {
 
     @Autowired
     private ActivityUserService activityUserService;
-
-    @Autowired
-    private ActivityPhotoRepository activityPhotoRepository;
 
     @PostMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<ActivityUser> createActivity(
@@ -40,30 +36,23 @@ public class ActivityUserController {
             activityUser.setPhotos(new ArrayList<>());
         }
 
-        if (files != null && !files.isEmpty()) {
-            byte[] zipBytes = zipFiles(files);
-
-            ActivityPhoto photo = new ActivityPhoto();
-            photo.setImageFile(zipBytes);
-            ActivityPhoto savedPhoto = activityPhotoRepository.save(photo);
-            activityUser.getPhotos().add(savedPhoto);
-        }
-        ActivityUser createdActivity = activityUserService.createActivity(activityUser);
+        ActivityUser createdActivity = activityUserService.createActivity(activityUser, files);
 
         return ResponseEntity.ok(createdActivity);
     }
 
-    private byte[] zipFiles(List<MultipartFile> files) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
-            for (MultipartFile file : files) {
-                ZipEntry zipEntry = new ZipEntry(file.getOriginalFilename());
-                zipOutputStream.putNextEntry(zipEntry);
-                zipOutputStream.write(file.getBytes());
-                zipOutputStream.closeEntry();
-            }
-        }
-        return byteArrayOutputStream.toByteArray();
+    @GetMapping("/{activityId}")
+    public ResponseEntity<Map<String, Object>> getActivityById(@PathVariable UUID activityId) throws IOException {
+        return activityUserService.getActivityById(activityId);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<Page<ActivityUserDTO>> getFindAllActivities(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "100") int size) {
+        
+        Page<ActivityUserDTO> activitiesPage = activityUserService.listActivities(PageRequest.of(page, size));
+        return ResponseEntity.ok(activitiesPage);
+    }
+    
 }
