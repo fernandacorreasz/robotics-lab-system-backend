@@ -46,21 +46,10 @@ CREATE TABLE activity_component (
         REFERENCES component(id)
 );
 
--- Create many-to-many relationship table between ActivityUser and ActivityPhoto
 CREATE TABLE activity_photo_relation (
     activity_id UUID NOT NULL,
     photo_id UUID NOT NULL,
     PRIMARY KEY (activity_id, photo_id),
-    -- Audit and version control columns
-    row_version SMALLINT NOT NULL DEFAULT 0,
-    row_created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    row_updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    row_created_by VARCHAR(64) NOT NULL DEFAULT 'unknown',
-    row_updated_by VARCHAR(64) NOT NULL DEFAULT 'unknown',
-    CONSTRAINT fk_activity_user
-        FOREIGN KEY (activity_id) 
-        REFERENCES activity_user(id),
-    CONSTRAINT fk_activity_photo
-        FOREIGN KEY (photo_id) 
-        REFERENCES activity_photo(id)
+    FOREIGN KEY (activity_id) REFERENCES activity_user(id),
+    FOREIGN KEY (photo_id) REFERENCES activity_photo(id)
 );

@@ -41,11 +41,12 @@ public class ActivityUser {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "ActivityPhoto",
+        name = "activity_photo_relation",
         joinColumns = @JoinColumn(name = "activity_id"),
         inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
     private List<ActivityPhoto> photos;
+    
 
     public ActivityUser() {
     }

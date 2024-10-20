@@ -1,12 +1,10 @@
 package robotic.system.activityUser.domain.model;
 
 import org.hibernate.annotations.GenericGenerator;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Blob;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,8 +18,8 @@ public class ActivityPhoto {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    @Lob
-    private Blob imageFile;
+    @Basic(optional = false, fetch = FetchType.LAZY)
+    private byte[] imageFile;
 
     @ManyToMany(mappedBy = "photos")
     private List<ActivityUser> activities;

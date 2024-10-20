@@ -1,15 +1,14 @@
 package robotic.system.activityUser.domain.model;
 
-import java.sql.Blob;
 import java.util.List;
 
 public class ActivityPhotoBuilder {
-    protected Blob imageFile;
+    protected byte[] imageFile;
     protected List<ActivityUser> activities;
 
     public ActivityPhotoBuilder() {}
 
-    public ActivityPhotoBuilder withImageFile(Blob imageFile) {
+    public ActivityPhotoBuilder withImageFile( byte[] imageFile) {
         this.imageFile = imageFile;
         return this;
     }
