@@ -12,6 +12,7 @@ public class ActivityUserBuilder {
     protected Integer timeSpent;
     protected Date startDate;
     protected Date endDate;
+    protected String userCode; 
     protected List<Component> componentsUsed;
     protected List<ActivityPhoto> photos;
 
@@ -59,5 +60,10 @@ public class ActivityUserBuilder {
 
     public ActivityUser build() {
         return new ActivityUser(this);
+    }
+
+    public ActivityUserBuilder withUserCode(String userCode) { 
+        this.userCode = userCode;
+        return this;
     }
 }

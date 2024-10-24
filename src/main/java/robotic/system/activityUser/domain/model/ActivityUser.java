@@ -24,6 +24,9 @@ public class ActivityUser {
     private String activityDescription;
     private String activityStatus;
     private Integer timeSpent;
+   
+    @Lob 
+    private String userCode;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
@@ -47,6 +50,8 @@ public class ActivityUser {
     )
     private List<ActivityPhoto> photos;
     
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     public ActivityUser() {
     }
@@ -59,6 +64,7 @@ public class ActivityUser {
         this.timeSpent = builder.timeSpent;
         this.startDate = builder.startDate;
         this.endDate = builder.endDate;
+        this.userCode = builder.userCode; 
         this.componentsUsed = builder.componentsUsed;
         this.photos = builder.photos;
     }
