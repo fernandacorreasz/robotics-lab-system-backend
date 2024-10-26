@@ -32,13 +32,12 @@ CREATE TABLE component_sub_category (
 -- Create table for Component
 CREATE TABLE component (
     id UUID PRIMARY KEY,
-    component_id VARCHAR(255) NOT NULL,
+    component_id VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
-    serial_number VARCHAR(255) NOT NULL,
+   serial_number VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     quantity INTEGER NOT NULL,
     sub_category_id UUID,
-    category_id UUID,
     -- Audit and version control columns
     row_version SMALLINT NOT NULL DEFAULT 0,
     row_created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -47,10 +46,7 @@ CREATE TABLE component (
     row_updated_by VARCHAR(64) NOT NULL DEFAULT 'unknown',
     CONSTRAINT fk_sub_category
         FOREIGN KEY (sub_category_id)
-        REFERENCES component_sub_category(id),
-    CONSTRAINT fk_category
-        FOREIGN KEY (category_id)
-        REFERENCES component_category(id)
+        REFERENCES component_sub_category(id)
 );
 
 -- Create table for ComponentTest

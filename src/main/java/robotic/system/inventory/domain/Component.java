@@ -2,10 +2,14 @@ package robotic.system.inventory.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -24,13 +28,10 @@ public class Component {
     private String description;
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+   @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subCategoryId", referencedColumnName = "id")
+    @JsonBackReference
     private ComponentSubCategory subCategory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", referencedColumnName = "id")
-    private ComponentCategory category;
     
     public Component() {
         this.componentId = UUID.randomUUID().toString();

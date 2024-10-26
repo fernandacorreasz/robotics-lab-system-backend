@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import robotic.system.inventory.domain.ComponentCategory;
+import robotic.system.inventory.domain.dto.CategoryWithSubcategoriesDTO;
+import robotic.system.inventory.domain.dto.SubCategoryDTO;
 import robotic.system.inventory.repository.ComponentCategoryRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ComponentCategoryService {
@@ -46,4 +50,20 @@ public class ComponentCategoryService {
         return componentCategoryRepository.findAll(pageable);
     }
 
-}
+    
+    public List<CategoryWithSubcategoriesDTO> getAllCategoriesWithSubcategories() {
+        // Chama o método que faz o JOIN FETCH para garantir o carregamento das subcategorias
+        List<ComponentCategory> categories = componentCategoryRepository.findAllCategoriesWithSubcategories();
+        
+        // Converte a entidade para o DTO
+        return categories.stream()
+            .map(category -> new CategoryWithSubcategoriesDTO(
+                category.getId(),
+                category.getCategoryName(),
+                category.getSubCategories().stream()
+                    .map(subCategory -> new SubCategoryDTO(subCategory.getId(), subCategory.getSubCategoryName()))
+                    .collect(Collectors.toList())
+            ))
+            .collect(Collectors.toList());
+    }
+    }

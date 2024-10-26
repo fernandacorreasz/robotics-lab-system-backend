@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import robotic.system.inventory.app.service.ComponentCategoryService;
 import robotic.system.inventory.domain.ComponentCategory;
-import robotic.system.inventory.domain.ComponentSubCategory;
+import robotic.system.inventory.domain.dto.CategoryWithSubcategoriesDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
@@ -52,6 +53,12 @@ public class ComponentCategoryController {
 
         Page<ComponentCategory> categoryPage = componentCategoryService.listCategories(PageRequest.of(page, size));
         return ResponseEntity.ok(categoryPage);
+    }
+
+    @GetMapping("/with-subcategories")
+    public ResponseEntity<List<CategoryWithSubcategoriesDTO>> getCategoriesWithSubcategories() {
+        List<CategoryWithSubcategoriesDTO> categories = componentCategoryService.getAllCategoriesWithSubcategories();
+        return ResponseEntity.ok(categories);
     }
 
 }

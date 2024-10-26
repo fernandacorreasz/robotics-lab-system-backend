@@ -2,9 +2,13 @@ package robotic.system.inventory.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -25,6 +29,10 @@ public class ComponentSubCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private ComponentCategory category;
+
+    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference 
+    private List<Component> components;
 
     public ComponentSubCategory() {
         this.subCategoryId = UUID.randomUUID().toString(); 

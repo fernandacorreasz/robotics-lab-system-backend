@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,6 +24,9 @@ public class ComponentCategory {
 
     @Column(nullable = false)
     private String categoryName;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ComponentSubCategory> subCategories; 
 
     public ComponentCategory() {
         this.categoryId = UUID.randomUUID().toString(); 
