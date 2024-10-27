@@ -29,7 +29,7 @@ public class ComponentBulkService {
     public CsvBulkUploadUtil.BulkUploadResult<Component> uploadComponentsFromCsvString(String csvData)
             throws Exception {
         return csvBulkUploadUtil.processCsv(csvData, fields -> {
-            if (fields.length != 6) {
+            if (fields.length != 5) {
                 throw new ComponentValidationException("CSV", ValidationMessages.INVALID_CSV_FORMAT);
             }
 
@@ -43,7 +43,7 @@ public class ComponentBulkService {
                 throw new ComponentValidationException("quantity",
                         String.format(ValidationMessages.INVALID_FORMAT, "quantity"));
             }
-            String subCategoryName = fields[5].trim();
+            String subCategoryName = fields[4].trim();
 
             if (componentRepository.findBySerialNumber(serialNumber).isPresent()) {
                 throw new ComponentValidationException("serialNumber",

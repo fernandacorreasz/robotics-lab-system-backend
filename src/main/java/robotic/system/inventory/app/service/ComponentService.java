@@ -24,6 +24,7 @@ import robotic.system.util.filter.FilterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -153,6 +154,60 @@ public class ComponentService {
 
     public List<Component> getComponentsBySubCategory(UUID subCategoryId) {
         return componentRepository.findBySubCategoryId(subCategoryId);
+    }
+
+    //alterar
+    public ComponentWithAssociationsDTO getComponentWithAssociationsById(UUID id) {
+        Component component = componentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Component not found"));
+        return new ComponentWithAssociationsDTO(
+                component.getId(),
+                component.getComponentId(),
+                component.getName(),
+                component.getSerialNumber(),
+                component.getDescription(),
+                component.getQuantity(),
+                component.getSubCategory() != null ? component.getSubCategory().getId() : null,
+                component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null
+        );
+    }
+
+    public Component updateComponent(UUID id, Map<String, Object> updates) {
+        Component component = componentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Component not found"));
+
+        // Atualiza somente os campos informados no Map
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "name":
+                    component.setName((String) value);
+                    break;
+                case "serialNumber":
+                    component.setSerialNumber((String) value);
+                    break;
+                case "description":
+                    component.setDescription((String) value);
+                    break;
+                case "quantity":
+                    component.setQuantity((Integer) value);
+                    break;
+                case "subCategoryId":
+                    // Se a subCategoria for atualizada, buscar a subCategoria correspondente
+                    if (value != null) {
+                        UUID subCategoryId = UUID.fromString((String) value);
+                        ComponentSubCategory subCategory = componentSubCategoryRepository.findById(subCategoryId)
+                                .orElseThrow(() -> new RuntimeException("SubCategory not found"));
+                        component.setSubCategory(subCategory);
+                    } else {
+                        component.setSubCategory(null);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Campo " + key + " não é válido para atualização.");
+            }
+        });
+
+        return componentRepository.save(component);
     }
 
 }

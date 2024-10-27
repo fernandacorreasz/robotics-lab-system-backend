@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
 import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
@@ -18,10 +20,11 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
     @Query("SELECT c.id as id, c.componentId as componentId, c.name as name, c.serialNumber as serialNumber, c.description as description, c.quantity as quantity FROM Component c")
     Page<ComponentDTO> findAllProjected(Pageable pageable);
 
-    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, " +
-           "sc.id, sc.subCategoryName) " +
-           "FROM Component c " +
-           "LEFT JOIN c.subCategory sc")
+    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, "
+            +
+            "sc.id, sc.subCategoryName) " +
+            "FROM Component c " +
+            "LEFT JOIN c.subCategory sc")
     Page<ComponentWithAssociationsDTO> findAllWithAssociations(Pageable pageable);
 
     Optional<Component> findBySerialNumber(String serialNumber);
@@ -30,4 +33,8 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
 
     @Query("SELECT c FROM Component c WHERE c.subCategory.id = :subCategoryId")
     List<Component> findBySubCategoryId(UUID subCategoryId);
+
+    @Query("SELECT c FROM Component c LEFT JOIN FETCH c.subCategory WHERE c.id = :id")
+    Optional<Component> findByIdWithAssociations(@Param("id") UUID id);
+
 }

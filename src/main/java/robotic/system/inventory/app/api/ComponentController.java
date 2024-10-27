@@ -19,6 +19,7 @@ import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.util.filter.FilterRequest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin
@@ -45,10 +46,10 @@ public class ComponentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Component> updateComponent(@PathVariable UUID id, @RequestBody Component component) {
-        Component updatedComponent = componentService.updateComponent(id, component);
+    public ResponseEntity<Component> updateComponent(@PathVariable UUID id, @RequestBody Map<String, Object> updates) {
+        Component updatedComponent = componentService.updateComponent(id, updates);
         return ResponseEntity.ok(updatedComponent);
-    }
+    }    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComponent(@PathVariable UUID id) {
@@ -132,6 +133,12 @@ public class ComponentController {
     public ResponseEntity<List<Component>> getComponentsBySubCategory(@PathVariable UUID subCategoryId) {
         List<Component> components = componentService.getComponentsBySubCategory(subCategoryId);
         return ResponseEntity.ok(components);
+    }
+
+    @GetMapping("/{id}/with-associations")
+    public ResponseEntity<ComponentWithAssociationsDTO> getComponentWithAssociationsById(@PathVariable UUID id) {
+        ComponentWithAssociationsDTO component = componentService.getComponentWithAssociationsById(id);
+        return ResponseEntity.ok(component);
     }
 }
     
