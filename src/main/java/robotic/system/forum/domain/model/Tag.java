@@ -1,10 +1,11 @@
 package robotic.system.forum.domain.model;
 
-import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,5 +25,6 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
+    @JsonBackReference
     private List<Forum> forums;
 }

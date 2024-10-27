@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import robotic.system.forum.domain.en.ForumStatus;
 import robotic.system.user.domain.model.Users;
 
@@ -27,7 +29,6 @@ public class Forum {
     private String title;
     private String description;
 
-    @Lob
     private String codeSnippet;
 
     @Enumerated(EnumType.STRING)
@@ -46,9 +47,11 @@ public class Forum {
     private int voteCount = 0;
 
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ForumComment> comments;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference 
     @JoinTable(name = "forum_tag", joinColumns = @JoinColumn(name = "forum_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
 

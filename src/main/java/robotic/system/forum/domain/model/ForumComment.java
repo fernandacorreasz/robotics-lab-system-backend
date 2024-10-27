@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import robotic.system.user.domain.model.Users;
 
 import java.util.Date;
@@ -21,17 +24,16 @@ public class ForumComment {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    @Lob
     private String content;
 
-    @Lob
-    private String codeSnippet;  // Trecho de código opcional
+    private String codeSnippet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "forum_id")
     private Forum forum;
 

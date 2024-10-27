@@ -9,11 +9,15 @@ public class FilterUtil {
 
     public static <T> Specification<T> byFilters(List<FilterRequest> filters) {
         return (root, query, builder) -> {
-            if (filters == null || filters.isEmpty()) {
-                return builder.disjunction();  // Retorna NENHUM registro se não houver filtros.
+            if (filters == null) {
+                return builder.disjunction(); 
             }
 
-            Predicate predicate = builder.conjunction();  // Inicializa o `Predicate` vazio.
+              if ( filters.isEmpty()) {
+                 return builder.conjunction();
+            }
+
+            Predicate predicate = builder.conjunction();
 
             for (FilterRequest filter : filters) {
                 String column = filter.getColumn();
