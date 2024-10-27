@@ -45,7 +45,7 @@ public class SecurityConfigurations {
                         .requestMatchers("/api/v1/categories/**").permitAll()
                         .requestMatchers("/api/v1/subcategories**").permitAll()
                         .requestMatchers("/api/v1/subcategories/**").permitAll()
-                        
+                        .requestMatchers("/api/v1/activityphotos/**").permitAll()
                         .requestMatchers("/api/v1/subcategories/all**").permitAll()
                         .requestMatchers("/api/v1/activities**").permitAll()
                         .requestMatchers("/api/v1/activities/**").permitAll()

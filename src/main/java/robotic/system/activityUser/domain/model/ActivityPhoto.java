@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
-
 @Getter
 @Setter
 @Entity
@@ -21,6 +20,9 @@ public class ActivityPhoto {
     @Basic(optional = false, fetch = FetchType.LAZY)
     private byte[] imageFile;
 
+    @Column(nullable = false)
+    private String filename;
+
     @ManyToMany(mappedBy = "photos")
     private List<ActivityUser> activities;
 
@@ -30,6 +32,7 @@ public class ActivityPhoto {
     ActivityPhoto(ActivityPhotoBuilder builder) {
         this.id = UUID.randomUUID();
         this.imageFile = builder.imageFile;
+        this.filename = builder.filename;
         this.activities = builder.activities;
     }
 }

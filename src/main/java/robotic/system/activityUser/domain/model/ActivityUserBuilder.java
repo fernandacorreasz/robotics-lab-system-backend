@@ -3,12 +3,13 @@ package robotic.system.activityUser.domain.model;
 import java.util.Date;
 import java.util.List;
 
+import robotic.system.activityUser.domain.en.ActivityStatus;
 import robotic.system.inventory.domain.Component;
 
 public class ActivityUserBuilder {
     protected String activityTitle;
     protected String activityDescription;
-    protected String activityStatus;
+    protected ActivityStatus activityStatus;
     protected Integer timeSpent;
     protected Date startDate;
     protected Date endDate;
@@ -28,7 +29,7 @@ public class ActivityUserBuilder {
         return this;
     }
 
-    public ActivityUserBuilder withActivityStatus(String activityStatus) {
+    public ActivityUserBuilder withActivityStatus(ActivityStatus activityStatus) {
         this.activityStatus = activityStatus;
         return this;
     }
