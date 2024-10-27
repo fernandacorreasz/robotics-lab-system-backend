@@ -1,6 +1,7 @@
 package robotic.system.loanComponent.domain.model;
 
 import robotic.system.inventory.domain.Component;
+import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.user.domain.model.Users;
 
 import java.util.Date;
@@ -13,7 +14,8 @@ public class LoanComponentBuilder {
     protected Date expectedReturnDate;
     protected Date actualReturnDate;
     protected Users returnAuthorizer;
-    protected String status;
+    protected LoanStatus status;
+    protected int quantity;
 
     public LoanComponentBuilder withBorrower(Users borrower) {
         this.borrower = borrower;
@@ -50,8 +52,13 @@ public class LoanComponentBuilder {
         return this;
     }
 
-    public LoanComponentBuilder withStatus(String status) {
+    public LoanComponentBuilder withStatus(LoanStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public LoanComponentBuilder withQuantitys(int quantity) {
+        this.quantity = quantity;
         return this;
     }
 

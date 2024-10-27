@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.repository.ComponentRepository;
+import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.loanComponent.domain.model.LoanComponent;
 import robotic.system.loanComponent.repository.LoanComponentRepository;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.repository.UserRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,13 +33,26 @@ public class LoanRequestService {
         Component component = componentRepository.findByName(componentName)
                 .orElseThrow(() -> new RuntimeException("Componente não encontrado: " + componentName));
 
-        // Verificar se há estoque disponível
-        if (component.getQuantity() < quantity) {
-            throw new RuntimeException("Quantidade solicitada excede o estoque disponível.");
+        // Calcular a quantidade de componentes já emprestados
+        Integer totalLoaned = loanComponentRepository.sumLoanedQuantitiesByComponentId(component.getId(), LoanStatus.RETURNED);
+        
+        if (totalLoaned == null) {
+            totalLoaned = 0;
         }
 
-        // Buscar o usuário que está solicitando o empréstimo (pelo e-mail)
-        Users borrower = userRepository.findByEmail(borrowerEmail);
+        // Calcular quantos componentes ainda estão disponíveis
+        int availableQuantity = component.getQuantity() - totalLoaned;
+
+        // Verificar a disponibilidade
+        if (availableQuantity <= 0) {
+            throw new RuntimeException("Não há disponibilidade para empréstimo.");
+        } else if (quantity > availableQuantity) {
+            throw new RuntimeException("No momento, apenas " + availableQuantity + " componentes estão disponíveis para empréstimo.");
+        }
+
+        // Buscar o usuário que está solicitando o empréstimo
+        Users borrower = userRepository.findOptionalByEmail(borrowerEmail)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + borrowerEmail));
 
         // Criar a entidade de empréstimo (LoanComponent)
         LoanComponent loan = new LoanComponent();
@@ -46,14 +61,10 @@ public class LoanRequestService {
         loan.setComponent(component);
         loan.setLoanDate(new Date()); // Data de solicitação do empréstimo
         loan.setExpectedReturnDate(expectedReturnDate);
-        loan.setStatus("Pendente de Autorização");
+        loan.setQuantity(quantity);
+        loan.setStatus(LoanStatus.PENDING_AUTHORIZATION);  // Setting initial status as PENDING_AUTHORIZATION
 
         // Registrar o empréstimo no banco de dados
-        LoanComponent savedLoan = loanComponentRepository.save(loan);
-
-        // (Opcional) Notificar o autorizador que há um novo pedido de empréstimo
-        // notificationService.notifyAuthorizer(loan);
-
-        return savedLoan;
+        return loanComponentRepository.save(loan);
     }
 }

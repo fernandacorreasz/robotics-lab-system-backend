@@ -44,7 +44,7 @@ public class LoanComponentService {
         loan.setLoanDate(new Date());
         loan.setBorrower(userRepository.findByEmail(borrowerEmail)); // Associa o usuário logado
 
-        loan.setStatus("Pendente de Autorização");
+        //loan.setStatus("Pendente de Autorização");
         return loanComponentRepository.save(loan);
     }
 }

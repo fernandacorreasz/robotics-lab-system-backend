@@ -2,14 +2,18 @@ package robotic.system.loanComponent.domain.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import robotic.system.inventory.domain.Component;
+import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.user.domain.model.Users;
 
 import java.util.Date;
 import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -25,14 +29,17 @@ public class LoanComponent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrower_id", referencedColumnName = "id")
+    @JsonIgnore // Break the cycle by ignoring borrower serialization
     private Users borrower;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorizer_id", referencedColumnName = "id")
+    @JsonIgnore
     private Users authorizer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "component_id", referencedColumnName = "id")
+    @JsonIgnore
     private Component component;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -46,9 +53,13 @@ public class LoanComponent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "return_authorizer_id", referencedColumnName = "id")
+    @JsonIgnore
     private Users returnAuthorizer;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LoanStatus status;
+
+    private int quantity;
 
     public LoanComponent() {
     }
@@ -64,5 +75,6 @@ public class LoanComponent {
         this.actualReturnDate = builder.actualReturnDate;
         this.returnAuthorizer = builder.returnAuthorizer;
         this.status = builder.status;
+        this.quantity = builder.quantity;
     }
 }

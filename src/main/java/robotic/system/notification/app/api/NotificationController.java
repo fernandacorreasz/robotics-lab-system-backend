@@ -24,10 +24,4 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    // Endpoint para marcar uma notificação como lida (opcional)
-    @PutMapping("/{id}/mark-as-read")
-    public ResponseEntity<Void> markNotificationAsRead(@PathVariable UUID id) {
-        notificationService.markAsRead(id);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -37,4 +37,7 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
     @Query("SELECT c FROM Component c LEFT JOIN FETCH c.subCategory WHERE c.id = :id")
     Optional<Component> findByIdWithAssociations(@Param("id") UUID id);
 
+    @Query("SELECT SUM(c.quantity) FROM Component c WHERE c.id = :componentId")
+    Integer findTotalQuantityByComponentId(UUID componentId);
+
 }

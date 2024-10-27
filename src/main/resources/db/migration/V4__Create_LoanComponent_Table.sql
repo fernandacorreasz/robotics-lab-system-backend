@@ -10,6 +10,7 @@ CREATE TABLE loan_component (
     actual_return_date TIMESTAMP,
     return_authorizer_id UUID,
     status VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
     -- Audit and version control columns
     row_version SMALLINT NOT NULL DEFAULT 0,
     row_created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
