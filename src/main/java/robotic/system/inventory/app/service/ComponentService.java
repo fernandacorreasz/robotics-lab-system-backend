@@ -134,7 +134,7 @@ public class ComponentService {
     public Page<ComponentWithAssociationsDTO> filterComponents(List<FilterRequest> filters, Pageable pageable) {
         Specification<Component> spec = FilterUtil.byFilters(filters);
         Page<Component> componentsPage = componentRepository.findAll(spec, pageable);
-
+    
         // Converter para DTO
         List<ComponentWithAssociationsDTO> dtoList = componentsPage.getContent().stream()
             .map(component -> new ComponentWithAssociationsDTO(
@@ -148,9 +148,11 @@ public class ComponentService {
                 component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null
             ))
             .collect(Collectors.toList());
-
+    
         return new PageImpl<>(dtoList, pageable, componentsPage.getTotalElements());
     }
+    
+    
 
     public List<Component> getComponentsBySubCategory(UUID subCategoryId) {
         return componentRepository.findBySubCategoryId(subCategoryId);

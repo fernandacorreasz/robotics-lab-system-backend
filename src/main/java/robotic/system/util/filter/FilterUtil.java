@@ -10,10 +10,10 @@ public class FilterUtil {
     public static <T> Specification<T> byFilters(List<FilterRequest> filters) {
         return (root, query, builder) -> {
             if (filters == null || filters.isEmpty()) {
-                return builder.conjunction();  // Retorna todos os registros se não houver filtros.
+                return builder.disjunction();  // Retorna NENHUM registro se não houver filtros.
             }
 
-            Predicate predicate = builder.conjunction();  // Inicializa o `Predicate`.
+            Predicate predicate = builder.conjunction();  // Inicializa o `Predicate` vazio.
 
             for (FilterRequest filter : filters) {
                 String column = filter.getColumn();
