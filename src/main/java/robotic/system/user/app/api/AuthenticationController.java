@@ -45,7 +45,7 @@ public class AuthenticationController {
                 .max()
                 .orElse(0);
     
-            return ResponseEntity.ok(new LoginResponseDTO(token, permissionLevel, user.getName()));
+        return ResponseEntity.ok(new LoginResponseDTO(token, permissionLevel, user.getName(), user.getId()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }

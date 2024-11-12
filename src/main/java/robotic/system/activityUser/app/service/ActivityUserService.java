@@ -17,12 +17,15 @@ import robotic.system.user.domain.model.Users;
 import robotic.system.user.repository.UserRepository;
 import robotic.system.activityUser.app.service.ActivityUserService;
 import robotic.system.activityUser.domain.dto.ActivityUserDTO;
+import robotic.system.activityUser.domain.dto.ActivityWithCommentsDTO;
+import robotic.system.activityUser.domain.dto.CommentDTO;
 import robotic.system.activityUser.domain.model.ActivityPhoto;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ActivityUserService {
@@ -35,6 +38,7 @@ public class ActivityUserService {
 
      @Autowired
     private UserRepository userRepository;
+
     @Transactional
     public ActivityUser createActivity(ActivityUser activityUser, List<MultipartFile> files, UUID userId)
             throws IOException {
@@ -162,7 +166,40 @@ public class ActivityUserService {
         return activityUserRepository.findAllActivityUserDTO(pageable);
     }
 
+    public Page<ActivityUserDTO> listActivitiesByUserId(UUID userId, Pageable pageable) {
+        return activityUserRepository.findAllActivityUserDTOByUserId(userId, pageable);
+    }
+    
+
     public Optional<ActivityUserDTO> getActivityByIdWithUserDetails(UUID activityId) {
         return activityUserRepository.findActivityByIdWithUserDetails(activityId);
     }
+
+public Optional<ActivityWithCommentsDTO> getActivityWithCommentsById(UUID activityId) {
+    Optional<ActivityUser> activityUser = activityUserRepository.findById(activityId);
+    if (activityUser.isPresent()) {
+        ActivityUser activity = activityUser.get();
+        List<CommentDTO> commentDTOs = activity.getComments().stream()
+            .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getCreatedDate()))
+            .collect(Collectors.toList());
+
+        return Optional.of(new ActivityWithCommentsDTO(
+            activity.getId(),
+            activity.getActivityTitle(),
+            activity.getActivityDescription(),
+            activity.getActivityStatus(),
+            activity.getTimeSpent(),
+            activity.getStartDate(),
+            activity.getEndDate(),
+            activity.getUser().getId(),
+            activity.getUser().getEmail(),
+            commentDTOs
+        ));
+    }
+    return Optional.empty();
+}
+
+    
+
+
 }

@@ -8,7 +8,7 @@ import robotic.system.notification.repository.NotificationRepository;
 
 import java.util.Date;
 import java.util.List;
-
+import java.util.UUID;
 @Service
 public class NotificationService {
 
@@ -41,5 +41,16 @@ public class NotificationService {
     // Buscar todas as notificações por e-mail do usuário
     public List<Notification> getNotificationsByUserEmail(String email) {
         return notificationRepository.findByRecipientEmail(email);
+    }
+
+    // Excluir notificação por e-mail do usuário e ID
+    public boolean deleteNotificationByUserEmailAndId(String email, UUID notificationId) {
+        return notificationRepository.findById(notificationId)
+                .filter(notification -> notification.getRecipientEmail().equals(email))
+                .map(notification -> {
+                    notificationRepository.delete(notification);
+                    return true;
+                })
+                .orElse(false);
     }
 }

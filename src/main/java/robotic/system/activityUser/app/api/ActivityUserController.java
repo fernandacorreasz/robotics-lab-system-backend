@@ -10,12 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import robotic.system.activityUser.domain.dto.ActivityUserDTO;
+import robotic.system.activityUser.domain.dto.ActivityWithCommentsDTO;
 import robotic.system.activityUser.domain.en.ActivityStatus;
 import robotic.system.activityUser.domain.model.ActivityUser;
 import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.activityUser.app.service.ActivityPhotoByActivityService;
 import robotic.system.activityUser.app.service.ActivityUpdateService;
 import robotic.system.activityUser.app.service.ActivityUserService;
+import robotic.system.activityUser.app.service.CommentService;
 import robotic.system.activityUser.app.service.DeleteActivityService;
 
 import java.io.IOException;
@@ -79,7 +81,7 @@ public class ActivityUserController {
         return activity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all-teste")
     public ResponseEntity<Page<ActivityUserDTO>> getFindAllActivities(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "100") int size) {
@@ -99,4 +101,42 @@ public class ActivityUserController {
         return ResponseEntity.ok(result);
     }
 
+
+    @GetMapping("/all/{userId}")
+    public ResponseEntity<Page<ActivityUserDTO>> getFindAllActivitiesByUser(
+            @PathVariable UUID userId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "100") int size) {
+    
+        Page<ActivityUserDTO> activitiesPage = activityUserService.listActivitiesByUserId(userId, PageRequest.of(page, size));
+        return ResponseEntity.ok(activitiesPage);
+    }
+
+     @Autowired
+    private CommentService commentService;
+
+    @PostMapping("/{activityId}/comments")
+    public ResponseEntity<Map<String, String>> addCommentToActivity(
+            @PathVariable UUID activityId,
+            @RequestParam("text") String text) {
+
+        try {
+            String resultMessage = commentService.addCommentToActivity(activityId, text);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", resultMessage);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/{activityId}/comments")
+    public ResponseEntity<ActivityWithCommentsDTO> getActivityWithComments(@PathVariable UUID activityId) {
+        Optional<ActivityWithCommentsDTO> activityWithComments = activityUserService.getActivityWithCommentsById(activityId);
+        return activityWithComments.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+    
 }

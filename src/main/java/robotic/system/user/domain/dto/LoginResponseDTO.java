@@ -1,4 +1,6 @@
 package robotic.system.user.domain.dto;
 
-public record LoginResponseDTO(String token, int permissionLevel, String name) {
+import java.util.UUID;
+
+public record LoginResponseDTO(String token, int permissionLevel, String name, UUID userId) {
 }

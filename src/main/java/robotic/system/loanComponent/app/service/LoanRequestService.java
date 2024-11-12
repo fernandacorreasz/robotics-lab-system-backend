@@ -8,6 +8,7 @@ import robotic.system.inventory.repository.ComponentRepository;
 import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.loanComponent.domain.model.LoanComponent;
 import robotic.system.loanComponent.repository.LoanComponentRepository;
+import robotic.system.notification.app.service.NotificationService;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.repository.UserRepository;
 
@@ -26,6 +27,9 @@ public class LoanRequestService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Transactional
     public LoanComponent requestLoan(String componentName, int quantity, Date expectedReturnDate, String borrowerEmail) {
@@ -66,5 +70,12 @@ public class LoanRequestService {
 
         // Registrar o empréstimo no banco de dados
         return loanComponentRepository.save(loan);
+    }
+
+    public void checkAndNotifyOverdueLoans() {
+        List<LoanComponent> overdueLoans = loanComponentRepository.findOverdueLoans(new Date(), LoanStatus.OVERDUE);
+        for (LoanComponent loan : overdueLoans) {
+            notificationService.notifyOverdueLoan(loan);
+        }
     }
 }

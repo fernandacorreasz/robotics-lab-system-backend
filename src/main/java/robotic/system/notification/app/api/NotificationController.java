@@ -24,4 +24,13 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
+      // Endpoint para excluir uma notificação específica de um usuário
+      @DeleteMapping("/user/{email}/notification/{notificationId}")
+      public ResponseEntity<Void> deleteNotificationForUser(
+              @PathVariable String email,
+              @PathVariable UUID notificationId) {
+          boolean deleted = notificationService.deleteNotificationByUserEmailAndId(email, notificationId);
+          return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+      }
+
 }
