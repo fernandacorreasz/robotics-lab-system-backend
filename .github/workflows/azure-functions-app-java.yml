@@ -1,0 +1,53 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+        
+    - name: Build with Maven
+      env:
+          PROD_TOKEN: ${{ secrets.PROD_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: |
+        chmod +x ./mvnw
+        mvn clean install
+         mvn sonar:sonar \
+            -Dsonar.projectKey=robotics_lab_system_backend \
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$PROD_TOKEN
+
+    - name: Build Docker image
+      run: |
+        docker build -t robotics-lab-system-backend:latest .
+        docker save robotics-lab-system-backend:latest -o robotics-lab-system-backend.tar
+        
+    - name: Deploy to Production
+      env:
+        PROD_HOST: ${{ secrets.PROD_HOST }}
+        PROD_USER: ${{ secrets.PROD_USER }}
+        PROD_PASSWORD: ${{ secrets.PROD_PASSWORD }}
+      run: |
+        sshpass -p "$PROD_PASSWORD" scp -o StrictHostKeyChecking=no robotics-lab-system-backend.tar $PROD_USER@$PROD_HOST:/tmp
+        sshpass -p "$PROD_PASSWORD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST "docker load -i /tmp/robotics-lab-system-backend.tar && rm /tmp/robotics-lab-system-backend.tar && docker image prune -f && cd /home/$PROD_USER/projeto-tcc && docker-compose up -d $PROD_IMAGE_NAME"
