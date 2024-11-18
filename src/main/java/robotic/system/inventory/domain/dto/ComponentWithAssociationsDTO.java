@@ -15,8 +15,12 @@ public class ComponentWithAssociationsDTO {
     private Integer quantity;
     private UUID subCategoryId;
     private String subCategoryName;
+    private UUID categoryId;
+    private String categoryName;
 
-    public ComponentWithAssociationsDTO(UUID id, String componentId, String name, String serialNumber, String description, Integer quantity, UUID subCategoryId, String subCategoryName) {
+    public ComponentWithAssociationsDTO(UUID id, String componentId, String name, String serialNumber,
+                                        String description, Integer quantity, UUID subCategoryId,
+                                        String subCategoryName, UUID categoryId, String categoryName) {
         this.id = id;
         this.componentId = componentId;
         this.name = name;
@@ -25,6 +29,8 @@ public class ComponentWithAssociationsDTO {
         this.quantity = quantity;
         this.subCategoryId = subCategoryId;
         this.subCategoryName = subCategoryName;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
-
 }
+

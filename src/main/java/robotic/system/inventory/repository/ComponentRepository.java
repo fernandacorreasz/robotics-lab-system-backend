@@ -17,15 +17,17 @@ import java.util.UUID;
 
 public interface ComponentRepository extends JpaRepository<Component, UUID>, JpaSpecificationExecutor<Component> {
 
+    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(" +
+            "c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, " +
+            "sc.id, sc.subCategoryName, cat.id, cat.categoryName) " +
+            "FROM Component c " +
+            "LEFT JOIN c.subCategory sc " +
+            "LEFT JOIN sc.category cat")
+    Page<ComponentWithAssociationsDTO> findAllWithAssociations(Pageable pageable);
+
+
     @Query("SELECT c.id as id, c.componentId as componentId, c.name as name, c.serialNumber as serialNumber, c.description as description, c.quantity as quantity FROM Component c")
     Page<ComponentDTO> findAllProjected(Pageable pageable);
-
-    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, "
-            +
-            "sc.id, sc.subCategoryName) " +
-            "FROM Component c " +
-            "LEFT JOIN c.subCategory sc")
-    Page<ComponentWithAssociationsDTO> findAllWithAssociations(Pageable pageable);
 
     Optional<Component> findBySerialNumber(String serialNumber);
 

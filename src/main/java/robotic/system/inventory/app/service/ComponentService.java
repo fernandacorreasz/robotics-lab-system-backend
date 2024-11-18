@@ -106,18 +106,7 @@ public class ComponentService {
     }
 
 
-  @Transactional
-    public BulkDeleteService.BulkDeleteResult deleteComponentsBySerialNumbers(List<String> serialNumbers) {
-        return bulkDeleteService.bulkDeleteByField(
-                serialNumbers,
-                this::findComponentBySerialNumber,
-                this::removeAndDeleteComponent
-        );
-    }
 
-    private Component findComponentBySerialNumber(String serialNumber) {
-        return componentRepository.findBySerialNumber(serialNumber).orElse(null);
-    }
 
     private Boolean removeAndDeleteComponent(Component component) {
         try {
@@ -129,39 +118,42 @@ public class ComponentService {
             return false;
         }
     }
-    
- 
+
+//filtro personsalizado
     public Page<ComponentWithAssociationsDTO> filterComponents(List<FilterRequest> filters, Pageable pageable) {
         Specification<Component> spec = FilterUtil.byFilters(filters);
         Page<Component> componentsPage = componentRepository.findAll(spec, pageable);
-    
-        // Converter para DTO
+
+        // Converter para DTO com categoria
         List<ComponentWithAssociationsDTO> dtoList = componentsPage.getContent().stream()
-            .map(component -> new ComponentWithAssociationsDTO(
-                component.getId(),
-                component.getComponentId(),
-                component.getName(),
-                component.getSerialNumber(),
-                component.getDescription(),
-                component.getQuantity(),
-                component.getSubCategory() != null ? component.getSubCategory().getId() : null,
-                component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null
-            ))
-            .collect(Collectors.toList());
-    
+                .map(component -> new ComponentWithAssociationsDTO(
+                        component.getId(),
+                        component.getComponentId(),
+                        component.getName(),
+                        component.getSerialNumber(),
+                        component.getDescription(),
+                        component.getQuantity(),
+                        component.getSubCategory() != null ? component.getSubCategory().getId() : null,
+                        component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null,
+                        component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                                ? component.getSubCategory().getCategory().getId() : null,
+                        component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                                ? component.getSubCategory().getCategory().getCategoryName() : null
+                ))
+                .collect(Collectors.toList());
+
         return new PageImpl<>(dtoList, pageable, componentsPage.getTotalElements());
     }
-    
-    
 
     public List<Component> getComponentsBySubCategory(UUID subCategoryId) {
         return componentRepository.findBySubCategoryId(subCategoryId);
     }
 
-    //alterar
+    //consulta id
     public ComponentWithAssociationsDTO getComponentWithAssociationsById(UUID id) {
         Component component = componentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Component not found"));
+
         return new ComponentWithAssociationsDTO(
                 component.getId(),
                 component.getComponentId(),
@@ -170,15 +162,17 @@ public class ComponentService {
                 component.getDescription(),
                 component.getQuantity(),
                 component.getSubCategory() != null ? component.getSubCategory().getId() : null,
-                component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null
+                component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null,
+                component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                        ? component.getSubCategory().getCategory().getId() : null,
+                component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                        ? component.getSubCategory().getCategory().getCategoryName() : null
         );
     }
 
     public Component updateComponent(UUID id, Map<String, Object> updates) {
         Component component = componentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Component not found"));
-
-        // Atualiza somente os campos informados no Map
         updates.forEach((key, value) -> {
             switch (key) {
                 case "name":
@@ -210,6 +204,20 @@ public class ComponentService {
         });
 
         return componentRepository.save(component);
+    }
+
+
+    @Transactional
+    public BulkDeleteService.BulkDeleteResult deleteComponentsBySerialNumbers(List<String> serialNumbers) {
+        return bulkDeleteService.bulkDeleteByField(
+                serialNumbers,
+                this::findComponentBySerialNumber,
+                this::removeAndDeleteComponent
+        );
+    }
+
+    private Component findComponentBySerialNumber(String serialNumber) {
+        return componentRepository.findBySerialNumber(serialNumber).orElse(null);
     }
 
 }

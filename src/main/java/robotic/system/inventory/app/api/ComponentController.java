@@ -33,11 +33,6 @@ public class ComponentController {
     @Autowired
     private ComponentBulkService componentBulkService;
 
-    @PostMapping
-    public ResponseEntity<Component> createComponent(@RequestBody Component component) {
-        Component createdComponent = componentService.createComponent(component);
-        return ResponseEntity.ok(createdComponent);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Component> getComponentById(@PathVariable UUID id) {
@@ -45,16 +40,16 @@ public class ComponentController {
         return ResponseEntity.ok(component);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Component> updateComponent(@PathVariable UUID id, @RequestBody Map<String, Object> updates) {
-        Component updatedComponent = componentService.updateComponent(id, updates);
-        return ResponseEntity.ok(updatedComponent);
-    }    
+    @GetMapping("/sub-category/{subCategoryId}")
+    public ResponseEntity<List<Component>> getComponentsBySubCategory(@PathVariable UUID subCategoryId) {
+        List<Component> components = componentService.getComponentsBySubCategory(subCategoryId);
+        return ResponseEntity.ok(components);
+    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComponent(@PathVariable UUID id) {
-        componentService.deleteComponent(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}/with-associations")
+    public ResponseEntity<ComponentWithAssociationsDTO> getComponentWithAssociationsById(@PathVariable UUID id) {
+        ComponentWithAssociationsDTO component = componentService.getComponentWithAssociationsById(id);
+        return ResponseEntity.ok(component);
     }
 
     @GetMapping("/all")
@@ -76,6 +71,16 @@ public class ComponentController {
         return ResponseEntity.ok(componentsPage);
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<Page<ComponentWithAssociationsDTO>> filterComponents(
+            @RequestBody List<FilterRequest> filters,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        Page<ComponentWithAssociationsDTO> componentsPage = componentService.filterComponents(filters, PageRequest.of(page, size));
+        return ResponseEntity.ok(componentsPage);
+    }
+
     @PostMapping("/bulk-upload")
     public ResponseEntity<?> uploadComponents(@RequestBody String csvData) {
         try {
@@ -91,6 +96,12 @@ public class ComponentController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<Component> createComponent(@RequestBody Component component) {
+        Component createdComponent = componentService.createComponent(component);
+        return ResponseEntity.ok(createdComponent);
+    }
+
     @PostMapping("/bulk-upload-json")
     public ResponseEntity<?> uploadComponentsViaJson(@RequestBody List<Component> components) {
         try {
@@ -101,6 +112,19 @@ public class ComponentController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Component> updateComponent(@PathVariable UUID id, @RequestBody Map<String, Object> updates) {
+        Component updatedComponent = componentService.updateComponent(id, updates);
+        return ResponseEntity.ok(updatedComponent);
+    }    
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComponent(@PathVariable UUID id) {
+        componentService.deleteComponent(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/bulk-delete")
@@ -114,31 +138,6 @@ public class ComponentController {
             // Se houver falhas, retornamos status 400 com a lista de falhas
             return ResponseEntity.badRequest().body(result);
         }
-
-        
-    }
-
-    
- @PostMapping("/filter")
-    public ResponseEntity<Page<ComponentWithAssociationsDTO>> filterComponents(
-            @RequestBody List<FilterRequest> filters,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-        
-        Page<ComponentWithAssociationsDTO> componentsPage = componentService.filterComponents(filters, PageRequest.of(page, size));
-        return ResponseEntity.ok(componentsPage);
-    }
-
-    @GetMapping("/sub-category/{subCategoryId}")
-    public ResponseEntity<List<Component>> getComponentsBySubCategory(@PathVariable UUID subCategoryId) {
-        List<Component> components = componentService.getComponentsBySubCategory(subCategoryId);
-        return ResponseEntity.ok(components);
-    }
-
-    @GetMapping("/{id}/with-associations")
-    public ResponseEntity<ComponentWithAssociationsDTO> getComponentWithAssociationsById(@PathVariable UUID id) {
-        ComponentWithAssociationsDTO component = componentService.getComponentWithAssociationsById(id);
-        return ResponseEntity.ok(component);
     }
 }
     
