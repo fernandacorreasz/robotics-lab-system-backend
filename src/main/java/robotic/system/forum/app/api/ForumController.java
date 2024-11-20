@@ -78,6 +78,12 @@ public class ForumController {
         return ResponseEntity.ok(createdEditHistory);
     }
 
+    @GetMapping("/{forumId}")
+    public ResponseEntity<ForumDTO> getForumById(@PathVariable UUID forumId) {
+        ForumDTO forumDTO = forumService.getForumById(forumId);
+        return ResponseEntity.ok(forumDTO);
+    }
+
     @PostMapping("/filter")
     public ResponseEntity<Page<ForumDTO>> filterForums(
             @RequestBody List<FilterRequest> filters,

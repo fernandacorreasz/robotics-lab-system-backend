@@ -2,10 +2,10 @@ package robotic.system.forum.app.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.el.stream.Optional;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +71,37 @@ public class ForumService {
         );
     }
 
- 
+    public ForumDTO getForumById(UUID forumId) {
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new IllegalArgumentException("Fórum não encontrado com o ID: " + forumId));
+
+        return new ForumDTO(
+                forum.getId(),
+                forum.getTitle(),
+                forum.getDescription(),
+                forum.getCodeSnippet(),
+                forum.getStatus(),
+                forum.getCreationDate(),
+                forum.getEditDate(),
+                forum.getVoteCount(),
+                forum.getUser().getName(),
+                forum.getUser().getId(),
+                forum.getComments().stream()
+                        .map(comment -> new CommentDTO(
+                                comment.getId(),
+                                comment.getContent(),
+                                comment.getCodeSnippet(),
+                                comment.getUser().getName(),
+                                comment.getUser().getId()
+                        ))
+                        .collect(Collectors.toList()),
+                forum.getTags().stream()
+                        .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                        .collect(Collectors.toList())
+        );
+    }
+
+
     public List<Forum> getAllForums() {
         return forumRepository.findAll();
     }
