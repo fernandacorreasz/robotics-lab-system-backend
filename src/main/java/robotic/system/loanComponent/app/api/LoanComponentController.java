@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import robotic.system.inventory.domain.dto.ComponentWithLoanDetailsDTO;
 import robotic.system.loanComponent.app.service.*;
 import robotic.system.loanComponent.domain.dto.LoanAuthorizationDTO;
 import robotic.system.loanComponent.domain.dto.LoanComponentDTO;
@@ -100,6 +101,15 @@ public class LoanComponentController {
         return ResponseEntity.ok(loansPage);
     }
 
+    @GetMapping("/all-inclusive")
+    public ResponseEntity<Page<LoanComponentDTO>> listAllLoansIncludingNulls(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        Page<LoanComponentDTO> loansPage = loanComponentService.listAllLoanComponentsIncludingNulls(PageRequest.of(page, size));
+        return ResponseEntity.ok(loansPage);
+    }
+
     @GetMapping("/{loanId}")
     public ResponseEntity<LoanComponentDTO> getLoanById(@PathVariable UUID loanId) {
         Optional<LoanComponentDTO> loanOpt = loanComponentService.getLoanById(loanId);
@@ -125,5 +135,11 @@ public class LoanComponentController {
         } else {
             return ResponseEntity.badRequest().body(result);
         }
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<List<ComponentWithLoanDetailsDTO>> getComponentsWithLoanDetails() {
+        List<ComponentWithLoanDetailsDTO> components = loanComponentService.getComponentsWithLoanDetails();
+        return ResponseEntity.ok(components);
     }
 }

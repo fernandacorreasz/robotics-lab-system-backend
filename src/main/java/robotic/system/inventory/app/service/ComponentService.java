@@ -14,19 +14,17 @@ import robotic.system.inventory.domain.ComponentSubCategory;
 import robotic.system.inventory.domain.dto.ComponentDTO;
 import robotic.system.inventory.domain.dto.ComponentResponseDTO;
 import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
+import robotic.system.inventory.domain.dto.ComponentWithLoanDetailsDTO;
 import robotic.system.inventory.exception.ComponentValidationException;
 import robotic.system.inventory.exception.ValidationMessages;
 import robotic.system.inventory.repository.ComponentRepository;
 import robotic.system.inventory.repository.ComponentSubCategoryRepository;
+import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.util.filter.FilterRequest;
 import robotic.system.util.filter.FilterUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -219,5 +217,4 @@ public class ComponentService {
     private Component findComponentBySerialNumber(String serialNumber) {
         return componentRepository.findBySerialNumber(serialNumber).orElse(null);
     }
-
 }

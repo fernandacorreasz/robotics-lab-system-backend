@@ -40,13 +40,6 @@ public interface LoanComponentRepository extends JpaRepository<LoanComponent, UU
     Optional<LoanComponentDTO> findLoanById(UUID loanId);
 
     @Query("SELECT new robotic.system.loanComponent.domain.dto.LoanComponentDTO(l.id, l.loanId, "
-            + "l.borrower.id, l.borrower.email, l.authorizer.id, l.authorizer.email, "
-            + "l.component.id, l.component.name, l.loanDate, l.expectedReturnDate, "
-            + "l.actualReturnDate, l.status, l.quantity) "
-            + "FROM LoanComponent l")
-    Page<LoanComponentDTO> findAllLoanComponentsWithDetails(Specification<LoanComponent> spec, Pageable pageable);
-
-    @Query("SELECT new robotic.system.loanComponent.domain.dto.LoanComponentDTO(l.id, l.loanId, "
     + "l.borrower.id, l.borrower.email, l.authorizer.id, l.authorizer.email, "
     + "l.component.id, l.component.name, l.loanDate, l.expectedReturnDate, "
     + "l.actualReturnDate, l.status, l.quantity) "
@@ -57,4 +50,15 @@ public interface LoanComponentRepository extends JpaRepository<LoanComponent, UU
 Page<LoanComponentDTO> findAllLoanComponentsWithFilters(
     String loanId, String borrowerEmail, String authorizerEmail, String componentName, Pageable pageable
 );
+
+    @Query("SELECT new robotic.system.loanComponent.domain.dto.LoanComponentDTO(l.id, l.loanId, "
+            + "l.borrower.id, l.borrower.email, l.authorizer.id, l.authorizer.email, "
+            + "l.component.id, l.component.name, l.loanDate, l.expectedReturnDate, "
+            + "l.actualReturnDate, l.status, l.quantity) "
+            + "FROM LoanComponent l "
+            + "LEFT JOIN l.borrower b "
+            + "LEFT JOIN l.authorizer a "
+            + "LEFT JOIN l.component c")
+    Page<LoanComponentDTO> findAllLoanComponentsWithAllDetails(Pageable pageable);
+
 }

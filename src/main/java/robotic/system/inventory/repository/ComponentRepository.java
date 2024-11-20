@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
@@ -25,7 +24,6 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
             "LEFT JOIN sc.category cat")
     Page<ComponentWithAssociationsDTO> findAllWithAssociations(Pageable pageable);
 
-
     @Query("SELECT c.id as id, c.componentId as componentId, c.name as name, c.serialNumber as serialNumber, c.description as description, c.quantity as quantity FROM Component c")
     Page<ComponentDTO> findAllProjected(Pageable pageable);
 
@@ -36,10 +34,26 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
     @Query("SELECT c FROM Component c WHERE c.subCategory.id = :subCategoryId")
     List<Component> findBySubCategoryId(UUID subCategoryId);
 
-    @Query("SELECT c FROM Component c LEFT JOIN FETCH c.subCategory WHERE c.id = :id")
-    Optional<Component> findByIdWithAssociations(@Param("id") UUID id);
+    @Query("""
+    SELECT 
+        c.id AS componentId, 
+        c.name AS name, 
+        c.serialNumber AS serialNumber, 
+        c.description AS description, 
+        c.quantity AS totalQuantity, 
+        CAST(l.status AS string) AS status, 
+        SUM(l.quantity) AS quantity
+    FROM Component c
+    LEFT JOIN LoanComponent l ON l.component.id = c.id
+    GROUP BY 
+        c.id, 
+        c.name, 
+        c.serialNumber, 
+        c.description, 
+        c.quantity, 
+        l.status
+""")
+    List<Object[]> findAllComponentsWithLoanStatusGrouped();
 
-    @Query("SELECT SUM(c.quantity) FROM Component c WHERE c.id = :componentId")
-    Integer findTotalQuantityByComponentId(UUID componentId);
 
 }
