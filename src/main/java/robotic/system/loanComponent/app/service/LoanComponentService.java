@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import robotic.system.inventory.domain.dto.ComponentWithLoanDetailsDTO;
+import robotic.system.loanComponent.domain.dto.ComponentWithLoanDetailsDTO;
 import robotic.system.inventory.repository.ComponentRepository;
 import robotic.system.loanComponent.domain.dto.LoanComponentDTO;
 import robotic.system.loanComponent.domain.en.LoanStatus;

@@ -5,12 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import robotic.system.inventory.domain.dto.ComponentWithLoanDetailsDTO;
 import robotic.system.loanComponent.app.service.*;
-import robotic.system.loanComponent.domain.dto.LoanAuthorizationDTO;
-import robotic.system.loanComponent.domain.dto.LoanComponentDTO;
-import robotic.system.loanComponent.domain.dto.LoanRequestDTO;
-import robotic.system.loanComponent.domain.dto.LoanReturnDTO;
+import robotic.system.loanComponent.domain.dto.*;
 import robotic.system.loanComponent.domain.model.LoanComponent;
 import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.util.filter.FilterRequest;
@@ -92,7 +88,7 @@ public class LoanComponentController {
         return ResponseEntity.ok(overdueLoans);
     }
 
-     @GetMapping("/all")
+    @GetMapping("/all")
     public ResponseEntity<Page<LoanComponentDTO>> listAllLoans(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -126,12 +122,12 @@ public class LoanComponentController {
         return ResponseEntity.ok(loanComponents);
     }
 
-     @DeleteMapping("/bulk-delete")
+    @DeleteMapping("/bulk-delete")
     public ResponseEntity<BulkDeleteService.BulkDeleteResult> deleteLoanComponents(@RequestBody List<String> loanIds) {
         BulkDeleteService.BulkDeleteResult result = loanComponentService.deleteLoanComponentsByIds(loanIds);
 
         if (result.getFailedItems().isEmpty()) {
-            return ResponseEntity.ok(result); 
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().body(result);
         }

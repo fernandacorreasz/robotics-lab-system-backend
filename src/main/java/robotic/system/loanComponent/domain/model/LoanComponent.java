@@ -1,12 +1,10 @@
 package robotic.system.loanComponent.domain.model;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import robotic.system.inventory.domain.Component;
 import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.user.domain.model.Users;

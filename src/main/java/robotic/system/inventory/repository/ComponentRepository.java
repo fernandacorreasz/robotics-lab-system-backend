@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
 import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
@@ -35,25 +34,23 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
     List<Component> findBySubCategoryId(UUID subCategoryId);
 
     @Query("""
-    SELECT 
-        c.id AS componentId, 
-        c.name AS name, 
-        c.serialNumber AS serialNumber, 
-        c.description AS description, 
-        c.quantity AS totalQuantity, 
-        CAST(l.status AS string) AS status, 
-        SUM(l.quantity) AS quantity
-    FROM Component c
-    LEFT JOIN LoanComponent l ON l.component.id = c.id
-    GROUP BY 
-        c.id, 
-        c.name, 
-        c.serialNumber, 
-        c.description, 
-        c.quantity, 
-        l.status
-""")
+                SELECT 
+                    c.id AS componentId, 
+                    c.name AS name, 
+                    c.serialNumber AS serialNumber, 
+                    c.description AS description, 
+                    c.quantity AS totalQuantity, 
+                    CAST(l.status AS string) AS status, 
+                    SUM(l.quantity) AS quantity
+                FROM Component c
+                LEFT JOIN LoanComponent l ON l.component.id = c.id
+                GROUP BY 
+                    c.id, 
+                    c.name, 
+                    c.serialNumber, 
+                    c.description, 
+                    c.quantity, 
+                    l.status
+            """)
     List<Object[]> findAllComponentsWithLoanStatusGrouped();
-
-
 }
