@@ -98,7 +98,7 @@ Abaixo está um diagrama básico representando os principais casos de uso do sis
 ## Documentação
 
 A documentação detalhada da aplicação pode ser acessada logo a baixo
-[Uploading Portfolio academico (3).pdf…]()
+[Portfolio academico (3).pdf](https://github.com/user-attachments/files/17836769/Portfolio.academico.3.pdf)
 
 
 ---
