@@ -4,6 +4,7 @@ import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import robotic.system.activityUser.app.constants.ErrorMessages;
 import robotic.system.activityUser.domain.model.ActivityPhoto;
 import robotic.system.activityUser.domain.model.ActivityUser;
 import robotic.system.activityUser.repository.ActivityPhotoRepository;
@@ -12,7 +13,6 @@ import robotic.system.activityUser.repository.ActivityUserRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -29,11 +29,9 @@ public class ActivityUpdateService {
     @Transactional
     public ActivityUser updateActivity(UUID activityId, ActivityUser updatedActivity, List<MultipartFile> files, Boolean removeExistingPhotos) throws IOException {
 
-        // Buscar a atividade existente pelo ID
         ActivityUser existingActivity = activityUserRepository.findById(activityId)
-                .orElseThrow(() -> new IllegalArgumentException("Atividade com id " + activityId + " não encontrada."));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(ErrorMessages.ACTIVITY_NOT_FOUND, activityId)));
 
-        // Atualizar campos não nulos de 'updatedActivity' (exceto 'user' e 'comments')
         if (updatedActivity.getActivityTitle() != null) {
             existingActivity.setActivityTitle(updatedActivity.getActivityTitle());
         }
@@ -66,8 +64,13 @@ public class ActivityUpdateService {
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 String contentType = file.getContentType();
+
+                if (contentType == null) {
+                    throw new IllegalArgumentException(ErrorMessages.NULL_CONTENT_TYPE);
+                }
+
                 if (!isSupportedContentType(contentType)) {
-                    throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente JPG, PNG e GIF são permitidos.");
+                    throw new IllegalArgumentException(ErrorMessages.UNSUPPORTED_FILE_TYPE);
                 }
 
                 byte[] zipBytes = zipFile(file);
@@ -83,7 +86,7 @@ public class ActivityUpdateService {
     }
 
     private boolean isSupportedContentType(String contentType) {
-        return contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/gif");
+        return "image/jpeg".equals(contentType) || "image/png".equals(contentType) || "image/gif".equals(contentType);
     }
 
     private byte[] zipFile(MultipartFile file) throws IOException {

@@ -61,8 +61,6 @@ public class ActivityUser {
     public ActivityUser() {
     }
 
- 
-
     ActivityUser(ActivityUserBuilder builder) {
         this.id = UUID.randomUUID();
         this.activityTitle = builder.activityTitle;
