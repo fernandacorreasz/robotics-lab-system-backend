@@ -77,20 +77,19 @@ public class ForumController {
         EditHistory createdEditHistory = editHistoryService.createEditHistory(editHistory);
         return ResponseEntity.ok(createdEditHistory);
     }
+
     @PostMapping("/filter")
     public ResponseEntity<Page<ForumDTO>> filterForums(
             @RequestBody List<FilterRequest> filters,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-    
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
         Pageable pageable = PageRequest.of(page, size);
-    
-        // Aplicando o Specification com os filtros corretamente
         Specification<Forum> spec = FilterUtil.byFilters(filters);
         Page<ForumDTO> filteredForums = forumService.filterForums(spec, pageable);
-    
         return ResponseEntity.ok(filteredForums);
     }
+
 
     @DeleteMapping("/delete")
     public ResponseEntity<BulkDeleteService.BulkDeleteResult> deleteForums(@RequestBody List<String> forumIds) {

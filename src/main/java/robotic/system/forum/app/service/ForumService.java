@@ -2,6 +2,7 @@ package robotic.system.forum.app.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.el.stream.Optional;
 import org.hibernate.validator.constraints.UUID;
@@ -12,9 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import robotic.system.forum.domain.dto.ForumCreateDTO;
-import robotic.system.forum.domain.dto.ForumDTO;
-import robotic.system.forum.domain.dto.ForumResponseDTO;
+import robotic.system.forum.domain.dto.*;
 import robotic.system.forum.domain.en.ForumStatus;
 import robotic.system.forum.domain.model.Forum;
 import robotic.system.forum.domain.model.Tag;
@@ -76,20 +75,31 @@ public class ForumService {
     public List<Forum> getAllForums() {
         return forumRepository.findAll();
     }
+
     public Page<ForumDTO> filterForums(Specification<Forum> spec, Pageable pageable) {
-        Page<Forum> forumsPage = forumRepository.findAll(spec, pageable);
-        
-        return forumsPage.map(forum -> new ForumDTO(
-            forum.getId(),
-            forum.getTitle(),
-            forum.getDescription(),
-            forum.getCodeSnippet(),
-            forum.getStatus(),
-            forum.getCreationDate(),
-            forum.getEditDate(),
-            forum.getVoteCount(),
-            forum.getComments(),
-            forum.getTags()
+        return forumRepository.findAll(spec, pageable).map(forum -> new ForumDTO(
+                forum.getId(),
+                forum.getTitle(),
+                forum.getDescription(),
+                forum.getCodeSnippet(),
+                forum.getStatus(),
+                forum.getCreationDate(),
+                forum.getEditDate(),
+                forum.getVoteCount(),
+                forum.getUser().getName(),
+                forum.getUser().getId(),
+                forum.getComments().stream()
+                        .map(comment -> new CommentDTO(
+                                comment.getId(),
+                                comment.getContent(),
+                                comment.getCodeSnippet(),
+                                comment.getUser().getName(),
+                                comment.getUser().getId()
+                        ))
+                        .collect(Collectors.toList()),
+                forum.getTags().stream()
+                        .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                        .collect(Collectors.toList())
         ));
     }
 
