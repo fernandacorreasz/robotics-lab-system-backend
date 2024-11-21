@@ -5,52 +5,70 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import robotic.system.forum.domain.model.EditHistory;
-import robotic.system.forum.domain.model.Forum;
-import robotic.system.forum.repository.EditHistoryRepository;
-import robotic.system.forum.repository.ForumRepository;
+import robotic.system.forum.domain.dto.ForumCreateDTO;
+import robotic.system.forum.repository.TagRepository;
+import robotic.system.user.domain.model.Users;
+import robotic.system.user.repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class ForumServicesTest {
 
     @Mock
-    private ForumRepository forumRepository;
-
+    private TagRepository tagRepository;
 
     @Mock
-    private EditHistoryRepository editHistoryRepository;
+    private UserRepository userRepository;
 
 
     @InjectMocks
-    private EditHistoryService editHistoryService;
+    private ForumService forumService;
 
-
-    @InjectMocks
-    private ForumBulkDeleteService forumBulkDeleteService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
-    void testCreateEditHistory_Successful() {
-        EditHistory editHistory = new EditHistory();
-        editHistory.setId(UUID.randomUUID());
+    void testCreateForum_UserNotFound() {
+        UUID userId = UUID.randomUUID();
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        when(editHistoryRepository.save(editHistory)).thenReturn(editHistory);
+        ForumCreateDTO forumCreateDTO = new ForumCreateDTO(
+                "Test Title", "Test Description", "Snippet", "OPEN", userId, List.of()
+        );
 
-        EditHistory result = editHistoryService.createEditHistory(editHistory);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                forumService.createForum(forumCreateDTO));
 
-        assertNotNull(result.getId(), "EditHistory ID should not be null");
-        verify(editHistoryRepository).save(editHistory);
+        assertTrue(exception.getMessage().contains("Usuário não encontrado"));
+        verify(userRepository).findById(userId);
     }
 
+    @Test
+    void testCreateForum_TagsNotFound() {
+        UUID userId = UUID.randomUUID();
+        Users user = new Users();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(tagRepository.findAllById(any())).thenReturn(Collections.emptyList());
+
+        ForumCreateDTO forumCreateDTO = new ForumCreateDTO(
+                "Test Title", "Test Description", "Snippet", "OPEN", userId, List.of(UUID.randomUUID())
+        );
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                forumService.createForum(forumCreateDTO));
+
+        assertTrue(exception.getMessage().contains("Algumas das tags fornecidas não foram encontradas"));
+        verify(userRepository).findById(userId);
+        verify(tagRepository).findAllById(any());
+    }
 }
