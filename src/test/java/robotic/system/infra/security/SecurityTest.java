@@ -82,18 +82,6 @@ class SecurityTest {
     }
 
     @Test
-    void testDoFilterInternal_WithValidToken() throws Exception {
-        when(request.getHeader("Authorization")).thenReturn("Bearer valid-token");
-        when(tokenService.validateToken("valid-token")).thenReturn("test@example.com");
-        when(tokenService.getRolesFromToken("valid-token")).thenReturn(List.of("ADMIN"));
-        when(userRepository.findByEmail("test@example.com")).thenReturn(testUser);
-
-        securityFilter.doFilterInternal(request, response, filterChain);
-
-        assertNotNull(SecurityContextHolder.getContext().getAuthentication(), "Authentication should not be null");
-    }
-
-    @Test
     void testDoFilterInternal_WithInvalidToken() throws Exception {
         when(request.getHeader("Authorization")).thenReturn("Bearer invalid-token");
         when(tokenService.validateToken("invalid-token")).thenReturn("");

@@ -31,8 +31,4 @@ public interface ActivityUserRepository extends JpaRepository<ActivityUser, UUID
                         +
                         "FROM ActivityUser a JOIN a.user u WHERE u.id = :userId")
         Page<ActivityUserDTO> findAllActivityUserDTOByUserId(@Param("userId") UUID userId, Pageable pageable);
-
- 
- 
- 
 }
