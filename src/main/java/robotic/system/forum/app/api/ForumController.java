@@ -7,20 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import robotic.system.forum.app.service.EditHistoryService;
-import robotic.system.forum.app.service.ForumBulkDeleteService;
-import robotic.system.forum.app.service.ForumCommentService;
-import robotic.system.forum.app.service.ForumService;
-import robotic.system.forum.app.service.TagService;
-import robotic.system.forum.domain.dto.ForumCommentCreateDTO;
-import robotic.system.forum.domain.dto.ForumCommentResponseDTO;
-import robotic.system.forum.domain.dto.ForumCreateDTO;
-import robotic.system.forum.domain.dto.ForumDTO;
-import robotic.system.forum.domain.dto.ForumResponseDTO;
-import robotic.system.forum.domain.dto.TagCreateDTO;
-import robotic.system.forum.domain.dto.TagResponseDTO;
-import robotic.system.forum.domain.model.*;
+import robotic.system.forum.app.service.*;
+import robotic.system.forum.domain.dto.*;
+import robotic.system.forum.domain.model.EditHistory;
+import robotic.system.forum.domain.model.Forum;
+import robotic.system.forum.domain.model.Tag;
 import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.util.filter.FilterRequest;
 import robotic.system.util.filter.FilterUtil;
@@ -48,20 +39,30 @@ public class ForumController {
     @Autowired
     private ForumBulkDeleteService forumBulkDeleteService;
 
-  
+
     @PostMapping("/tags")
     public ResponseEntity<TagResponseDTO> createTag(@RequestBody TagCreateDTO tagCreateDTO) {
         TagResponseDTO responseDTO = tagService.createTag(tagCreateDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
- @PostMapping("/create")
+    @GetMapping("/tags")
+    public ResponseEntity<List<TagDTO>> getAllTags() {
+        List<Tag> tags = tagService.getAllTags();
+
+        List<TagDTO> tagDTOs = tags.stream()
+                .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                .toList();
+        return ResponseEntity.ok(tagDTOs);
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<ForumResponseDTO> createForum(@RequestBody ForumCreateDTO forumCreateDTO) {
         ForumResponseDTO responseDTO = forumService.createForum(forumCreateDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
-  @PostMapping("/{forumId}/comments")
+    @PostMapping("/{forumId}/comments")
     public ResponseEntity<ForumCommentResponseDTO> createComment(@RequestBody ForumCommentCreateDTO commentDTO) {
         ForumCommentResponseDTO responseDTO = forumCommentService.createComment(commentDTO);
         return ResponseEntity.ok(responseDTO);
@@ -69,7 +70,7 @@ public class ForumController {
 
     @PostMapping("/{forumId}/edit-history")
     public ResponseEntity<EditHistory> createEditHistory(@PathVariable UUID forumId,
-            @RequestBody EditHistory editHistory) {
+                                                         @RequestBody EditHistory editHistory) {
         Forum forum = forumService.getAllForums().stream().filter(f -> f.getId().equals(forumId)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Forum not found"));
 
@@ -102,6 +103,6 @@ public class ForumController {
         BulkDeleteService.BulkDeleteResult result = forumBulkDeleteService.deleteForumsByIds(forumIds);
         return ResponseEntity.ok(result);
     }
-    
-    
+
+
 }
