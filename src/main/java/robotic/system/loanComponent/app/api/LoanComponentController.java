@@ -11,6 +11,8 @@ import robotic.system.loanComponent.domain.model.LoanComponent;
 import robotic.system.util.delete.BulkDeleteService;
 import robotic.system.util.filter.FilterRequest;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +39,9 @@ public class LoanComponentController {
 
     @Autowired
     private LoanComponentService loanComponentService;
+
+    @Autowired
+    private LoanRejectionService loanRejectionService;
 
     // 1. Solicitação de Empréstimo
     @PostMapping("/request")
@@ -138,4 +143,23 @@ public class LoanComponentController {
         List<ComponentWithLoanDetailsDTO> components = loanComponentService.getComponentsWithLoanDetails();
         return ResponseEntity.ok(components);
     }
+
+    @PostMapping("/reject")
+    public ResponseEntity<?> rejectLoan(@RequestBody LoanRejectionDTO loanRejectionDTO) {
+        try {
+            UUID loanId = loanRejectionDTO.getLoanId();
+            String authorizerEmail = loanRejectionDTO.getAuthorizerEmail();
+
+            LoanComponent loan = loanRejectionService.rejectLoan(loanId, authorizerEmail);
+
+            return ResponseEntity.ok(loan);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao processar a solicitação.");
+        }
+    }
+
 }
