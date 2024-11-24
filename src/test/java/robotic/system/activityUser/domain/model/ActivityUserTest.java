@@ -6,6 +6,7 @@ import robotic.system.activityUser.domain.dto.ActivityWithCommentsDTO;
 import robotic.system.activityUser.domain.dto.CommentDTO;
 import robotic.system.activityUser.domain.en.ActivityStatus;
 import robotic.system.inventory.domain.Component;
+import robotic.system.inventory.domain.dto.ComponentResponseDTO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,6 +84,7 @@ class ActivityUserTest {
 
     @Test
     void testActivityWithCommentsDTO() {
+        // Criando os dados de entrada
         UUID id = UUID.randomUUID();
         String title = "Test Activity with Comments";
         String description = "Description for activity with comments";
@@ -91,14 +93,35 @@ class ActivityUserTest {
         Date endDate = new Date();
         UUID userId = UUID.randomUUID();
         String userEmail = "user@example.com";
+
+        // Criando comentários
         List<CommentDTO> comments = List.of(
                 new CommentDTO(UUID.randomUUID(), "Comment 1", new Date()),
                 new CommentDTO(UUID.randomUUID(), "Comment 2", new Date())
         );
 
-        ActivityWithCommentsDTO dto = new ActivityWithCommentsDTO(id, title, description, ActivityStatus.COMPLETED,
-                timeSpent, startDate, endDate, userId, userEmail, comments);
+        // Criando componentes usados
+        List<ComponentResponseDTO> componentsUsed = List.of(
+                new ComponentResponseDTO(UUID.randomUUID(), "Component 1"),
+                new ComponentResponseDTO(UUID.randomUUID(), "Component 2")
+        );
 
+        // Criando o DTO
+        ActivityWithCommentsDTO dto = new ActivityWithCommentsDTO(
+                id,
+                title,
+                description,
+                ActivityStatus.COMPLETED,
+                timeSpent,
+                startDate,
+                endDate,
+                userId,
+                userEmail,
+                comments,
+                componentsUsed // Incluindo os componentes
+        );
+
+        // Assertivas para validar os dados
         assertEquals(id, dto.getId());
         assertEquals(title, dto.getActivityTitle());
         assertEquals(description, dto.getActivityDescription());
@@ -109,7 +132,9 @@ class ActivityUserTest {
         assertEquals(userId, dto.getUserId());
         assertEquals(userEmail, dto.getUserEmail());
         assertEquals(comments, dto.getComments());
+        assertEquals(componentsUsed, dto.getComponentsUsed()); // Validando os componentes usados
     }
+
 
     @Test
     void testCommentDTO() {

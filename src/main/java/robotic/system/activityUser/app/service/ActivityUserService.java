@@ -13,6 +13,7 @@ import robotic.system.activityUser.domain.model.ActivityUser;
 import robotic.system.activityUser.domain.model.Comment;
 import robotic.system.activityUser.repository.ActivityPhotoRepository;
 import robotic.system.activityUser.repository.ActivityUserRepository;
+import robotic.system.inventory.domain.dto.ComponentResponseDTO;
 import robotic.system.user.domain.model.Users;
 import robotic.system.user.repository.UserRepository;
 import robotic.system.activityUser.app.service.ActivityUserService;
@@ -175,29 +176,37 @@ public class ActivityUserService {
         return activityUserRepository.findActivityByIdWithUserDetails(activityId);
     }
 
-public Optional<ActivityWithCommentsDTO> getActivityWithCommentsById(UUID activityId) {
-    Optional<ActivityUser> activityUser = activityUserRepository.findById(activityId);
-    if (activityUser.isPresent()) {
-        ActivityUser activity = activityUser.get();
-        List<CommentDTO> commentDTOs = activity.getComments().stream()
-            .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getCreatedDate()))
-            .collect(Collectors.toList());
+    public Optional<ActivityWithCommentsDTO> getActivityWithCommentsById(UUID activityId) {
+        Optional<ActivityUser> activityUser = activityUserRepository.findById(activityId);
+        if (activityUser.isPresent()) {
+            ActivityUser activity = activityUser.get();
 
-        return Optional.of(new ActivityWithCommentsDTO(
-            activity.getId(),
-            activity.getActivityTitle(),
-            activity.getActivityDescription(),
-            activity.getActivityStatus(),
-            activity.getTimeSpent(),
-            activity.getStartDate(),
-            activity.getEndDate(),
-            activity.getUser().getId(),
-            activity.getUser().getEmail(),
-            commentDTOs
-        ));
+            List<CommentDTO> commentDTOs = activity.getComments().stream()
+                    .map(comment -> new CommentDTO(comment.getId(), comment.getText(), comment.getCreatedDate()))
+                    .collect(Collectors.toList());
+
+            // Mapear os componentes usados para ComponentResponseDTO
+            List<ComponentResponseDTO> componentDTOs = activity.getComponentsUsed().stream()
+                    .map(component -> new ComponentResponseDTO(component.getId(), component.getName()))
+                    .collect(Collectors.toList());
+
+            return Optional.of(new ActivityWithCommentsDTO(
+                    activity.getId(),
+                    activity.getActivityTitle(),
+                    activity.getActivityDescription(),
+                    activity.getActivityStatus(),
+                    activity.getTimeSpent(),
+                    activity.getStartDate(),
+                    activity.getEndDate(),
+                    activity.getUser().getId(),
+                    activity.getUser().getEmail(),
+                    commentDTOs,
+                    componentDTOs // Incluindo os componentes no DTO
+            ));
+        }
+        return Optional.empty();
     }
-    return Optional.empty();
-}
+
 
     
 
