@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import org.springframework.data.repository.query.Param;
 import robotic.system.loanComponent.domain.dto.LoanComponentDTO;
 import robotic.system.loanComponent.domain.en.LoanStatus;
 import robotic.system.loanComponent.domain.model.LoanComponent;
@@ -60,5 +61,16 @@ Page<LoanComponentDTO> findAllLoanComponentsWithFilters(
             + "LEFT JOIN l.authorizer a "
             + "LEFT JOIN l.component c")
     Page<LoanComponentDTO> findAllLoanComponentsWithAllDetails(Pageable pageable);
+
+    @Query("SELECT new robotic.system.loanComponent.domain.dto.LoanComponentDTO(l.id, l.loanId, "
+            + "l.borrower.id, l.borrower.email, l.authorizer.id, l.authorizer.email, "
+            + "l.component.id, l.component.name, l.loanDate, l.expectedReturnDate, "
+            + "l.actualReturnDate, l.status, l.quantity) "
+            + "FROM LoanComponent l "
+            + "LEFT JOIN l.borrower b "
+            + "LEFT JOIN l.authorizer a "
+            + "LEFT JOIN l.component c "
+            + "WHERE b.email = :email")
+    Page<LoanComponentDTO> findAllLoanComponentsByBorrowerEmail(@Param("email") String email, Pageable pageable);
 
 }

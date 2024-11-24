@@ -14,6 +14,7 @@ import robotic.system.util.filter.FilterRequest;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -147,6 +148,7 @@ public class LoanComponentController {
     @PostMapping("/reject")
     public ResponseEntity<?> rejectLoan(@RequestBody LoanRejectionDTO loanRejectionDTO) {
         try {
+            // Extraindo os dados do DTO
             UUID loanId = loanRejectionDTO.getLoanId();
             String authorizerEmail = loanRejectionDTO.getAuthorizerEmail();
 
@@ -154,12 +156,30 @@ public class LoanComponentController {
 
             return ResponseEntity.ok(loan);
         } catch (IllegalArgumentException e) {
+            // Responder com mensagem de erro detalhada
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IllegalStateException e) {
+            // Responder com mensagem de erro para estado inválido
             return ResponseEntity.status(409).body(e.getMessage());
         } catch (Exception e) {
+            // Responder com erro genérico para outros casos
             return ResponseEntity.status(500).body("Erro interno ao processar a solicitação.");
         }
+    }
+
+    @PostMapping("/by-borrower")
+    public ResponseEntity<Page<LoanComponentDTO>> getLoansByBorrowerEmail(
+            @RequestBody Map<String, String> request,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        String borrowerEmail = request.get("borrowerEmail");
+        if (borrowerEmail == null || borrowerEmail.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<LoanComponentDTO> loans = loanComponentService.listLoansByBorrowerEmail(borrowerEmail, PageRequest.of(page, size));
+        return ResponseEntity.ok(loans);
     }
 
 }

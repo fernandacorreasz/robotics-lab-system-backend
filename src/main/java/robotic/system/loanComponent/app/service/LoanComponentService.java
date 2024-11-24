@@ -168,4 +168,7 @@ public class LoanComponentService {
         return new ArrayList<>(componentMap.values());
     }
 
+    public Page<LoanComponentDTO> listLoansByBorrowerEmail(String borrowerEmail, Pageable pageable) {
+        return loanComponentRepository.findAllLoanComponentsByBorrowerEmail(borrowerEmail, pageable);
+    }
 }
