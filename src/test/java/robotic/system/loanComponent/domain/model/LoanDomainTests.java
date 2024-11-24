@@ -146,4 +146,6 @@ class LoanDomainTests {
         assertEquals(returnedQuantity, dto.getReturnedQuantity(), "Returned quantity should match");
         assertEquals(borrowerEmail, dto.getBorrowerEmail(), "Borrower email should match");
     }
+
+
 }
