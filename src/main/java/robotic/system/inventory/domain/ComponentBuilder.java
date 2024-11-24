@@ -6,6 +6,9 @@ public class ComponentBuilder {
     protected String serialNumber;
     protected String description;
     protected Integer quantity;
+    protected String tutorialLink;
+    protected String projectIdeas;
+    protected String librarySuggestions;
     protected ComponentSubCategory subCategory;
     protected ComponentCategory category;
 
@@ -33,6 +36,21 @@ public class ComponentBuilder {
 
     public ComponentBuilder withQuantity(Integer quantity) {
         this.quantity = quantity;
+        return this;
+    }
+
+    public ComponentBuilder withTutorialLink(String tutorialLink) {
+        this.tutorialLink = tutorialLink;
+        return this;
+    }
+
+    public ComponentBuilder withProjectIdeas(String projectIdeas) {
+        this.projectIdeas = projectIdeas;
+        return this;
+    }
+
+    public ComponentBuilder withLibrarySuggestions(String librarySuggestions) {
+        this.librarySuggestions = librarySuggestions;
         return this;
     }
 

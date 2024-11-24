@@ -66,8 +66,7 @@ public class ComponentService {
         return componentRepository.findAllWithAssociations(pageable);
     }
 
-
- @Transactional
+    @Transactional
     public List<ComponentResponseDTO> createComponents(List<Component> components) throws ComponentValidationException {
         List<Component> createdComponents = new ArrayList<>();
 
@@ -91,6 +90,11 @@ public class ComponentService {
             // Associar a subcategoria ao componente
             component.setSubCategory(subCategoryOpt.get());
 
+            // Processar os novos campos (se presentes)
+            component.setTutorialLink(component.getTutorialLink() != null ? component.getTutorialLink() : "");
+            component.setProjectIdeas(component.getProjectIdeas() != null ? component.getProjectIdeas() : "");
+            component.setLibrarySuggestions(component.getLibrarySuggestions() != null ? component.getLibrarySuggestions() : "");
+
             // Persistir o componente
             createdComponents.add(componentRepository.save(component));
         }
@@ -100,9 +104,6 @@ public class ComponentService {
                 .map(component -> new ComponentResponseDTO(component.getId(), component.getName()))
                 .collect(Collectors.toList());
     }
-
-
-
 
     private Boolean removeAndDeleteComponent(Component component) {
         try {
@@ -116,30 +117,32 @@ public class ComponentService {
     }
 
 //filtro personsalizado
-    public Page<ComponentWithAssociationsDTO> filterComponents(List<FilterRequest> filters, Pageable pageable) {
-        Specification<Component> spec = FilterUtil.byFilters(filters);
-        Page<Component> componentsPage = componentRepository.findAll(spec, pageable);
+public Page<ComponentWithAssociationsDTO> filterComponents(List<FilterRequest> filters, Pageable pageable) {
+    Specification<Component> spec = FilterUtil.byFilters(filters);
+    Page<Component> componentsPage = componentRepository.findAll(spec, pageable);
 
-        // Converter para DTO com categoria
-        List<ComponentWithAssociationsDTO> dtoList = componentsPage.getContent().stream()
-                .map(component -> new ComponentWithAssociationsDTO(
-                        component.getId(),
-                        component.getComponentId(),
-                        component.getName(),
-                        component.getSerialNumber(),
-                        component.getDescription(),
-                        component.getQuantity(),
-                        component.getSubCategory() != null ? component.getSubCategory().getId() : null,
-                        component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null,
-                        component.getSubCategory() != null && component.getSubCategory().getCategory() != null
-                                ? component.getSubCategory().getCategory().getId() : null,
-                        component.getSubCategory() != null && component.getSubCategory().getCategory() != null
-                                ? component.getSubCategory().getCategory().getCategoryName() : null
-                ))
-                .collect(Collectors.toList());
+    List<ComponentWithAssociationsDTO> dtoList = componentsPage.getContent().stream()
+            .map(component -> new ComponentWithAssociationsDTO(
+                    component.getId(),
+                    component.getComponentId(),
+                    component.getName(),
+                    component.getSerialNumber(),
+                    component.getDescription(),
+                    component.getQuantity(),
+                    component.getTutorialLink(),
+                    component.getProjectIdeas(),
+                    component.getLibrarySuggestions(),
+                    component.getSubCategory() != null ? component.getSubCategory().getId() : null,
+                    component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null,
+                    component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                            ? component.getSubCategory().getCategory().getId() : null,
+                    component.getSubCategory() != null && component.getSubCategory().getCategory() != null
+                            ? component.getSubCategory().getCategory().getCategoryName() : null
+            ))
+            .collect(Collectors.toList());
 
-        return new PageImpl<>(dtoList, pageable, componentsPage.getTotalElements());
-    }
+    return new PageImpl<>(dtoList, pageable, componentsPage.getTotalElements());
+}
 
     public List<Component> getComponentsBySubCategory(UUID subCategoryId) {
         return componentRepository.findBySubCategoryId(subCategoryId);
@@ -157,6 +160,9 @@ public class ComponentService {
                 component.getSerialNumber(),
                 component.getDescription(),
                 component.getQuantity(),
+                component.getTutorialLink(),
+                component.getProjectIdeas(),
+                component.getLibrarySuggestions(),
                 component.getSubCategory() != null ? component.getSubCategory().getId() : null,
                 component.getSubCategory() != null ? component.getSubCategory().getSubCategoryName() : null,
                 component.getSubCategory() != null && component.getSubCategory().getCategory() != null
@@ -165,6 +171,7 @@ public class ComponentService {
                         ? component.getSubCategory().getCategory().getCategoryName() : null
         );
     }
+
 
     public Component updateComponent(UUID id, Map<String, Object> updates) {
         Component component = componentRepository.findById(id)

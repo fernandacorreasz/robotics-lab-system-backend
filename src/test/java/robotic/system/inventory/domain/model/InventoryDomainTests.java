@@ -52,6 +52,9 @@ class InventoryDomainTests {
         String serialNumber = "RS-12345";
         String description = "A standard resistor";
         Integer quantity = 100;
+        String tutorialLink = "https://www.youtube.com/watch?v=example";
+        String projectIdeas = "Use this resistor in circuits to limit current.";
+        String librarySuggestions = "Arduino IDE, Fritzing, Multisim";
         UUID subCategoryId = UUID.randomUUID();
         String subCategoryName = "Electronics";
         UUID categoryId = UUID.randomUUID();
@@ -59,9 +62,11 @@ class InventoryDomainTests {
 
         ComponentWithAssociationsDTO dto = new ComponentWithAssociationsDTO(
                 id, componentId, name, serialNumber, description, quantity,
+                tutorialLink, projectIdeas, librarySuggestions,
                 subCategoryId, subCategoryName, categoryId, categoryName
         );
 
+        // Asserts for existing fields
         assertEquals(id, dto.getId(), "ID should match");
         assertEquals(componentId, dto.getComponentId(), "Component ID should match");
         assertEquals(name, dto.getName(), "Name should match");
@@ -72,6 +77,11 @@ class InventoryDomainTests {
         assertEquals(subCategoryName, dto.getSubCategoryName(), "SubCategory name should match");
         assertEquals(categoryId, dto.getCategoryId(), "Category ID should match");
         assertEquals(categoryName, dto.getCategoryName(), "Category name should match");
+
+        // Asserts for new fields
+        assertEquals(tutorialLink, dto.getTutorialLink(), "Tutorial link should match");
+        assertEquals(projectIdeas, dto.getProjectIdeas(), "Project ideas should match");
+        assertEquals(librarySuggestions, dto.getLibrarySuggestions(), "Library suggestions should match");
     }
 
     // SubCategoryDTO Tests

@@ -28,11 +28,20 @@ public class Component {
     private String description;
     private Integer quantity;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "tutorial_link")
+    private String tutorialLink; // Link do tutorial no YouTube
+
+    @Column(name = "project_ideas", columnDefinition = "TEXT")
+    private String projectIdeas; // Ideias de projetos
+
+    @Column(name = "library_suggestions", columnDefinition = "TEXT")
+    private String librarySuggestions; // Sugestões de bibliotecas
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subCategoryId", referencedColumnName = "id")
     @JsonBackReference
     private ComponentSubCategory subCategory;
-    
+
     public Component() {
         this.componentId = UUID.randomUUID().toString();
     }
@@ -43,5 +52,9 @@ public class Component {
         this.serialNumber = builder.serialNumber;
         this.description = builder.description;
         this.quantity = builder.quantity;
+        this.tutorialLink = builder.tutorialLink;
+        this.projectIdeas = builder.projectIdeas;
+        this.librarySuggestions = builder.librarySuggestions;
     }
 }
+

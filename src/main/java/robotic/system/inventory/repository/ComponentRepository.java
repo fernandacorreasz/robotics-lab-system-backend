@@ -17,6 +17,7 @@ public interface ComponentRepository extends JpaRepository<Component, UUID>, Jpa
 
     @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(" +
             "c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, " +
+            "c.tutorialLink, c.projectIdeas, c.librarySuggestions, " +
             "sc.id, sc.subCategoryName, cat.id, cat.categoryName) " +
             "FROM Component c " +
             "LEFT JOIN c.subCategory sc " +
