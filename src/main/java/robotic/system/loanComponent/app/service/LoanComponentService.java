@@ -123,19 +123,21 @@ public class LoanComponentService {
 
         for (Object[] row : rawData) {
             UUID componentId = (UUID) row[0];
-            String name = (String) row[1];
-            String serialNumber = (String) row[2];
-            String description = (String) row[3];
-            int totalQuantity = ((Number) row[4]).intValue();
-            String statusValue = (String) row[5];
-            int quantity = ((Number) row[6]).intValue();
+            String name = row[1] != null ? (String) row[1] : "Sem Nome";
+            String serialNumber = row[2] != null ? (String) row[2] : "Sem Número de Série";
+            String description = row[3] != null ? (String) row[3] : "Sem Descrição";
+            int totalQuantity = row[4] != null ? ((Number) row[4]).intValue() : 0;
+            String statusValue = row[5] != null ? (String) row[5] : null;
+            int quantity = row[6] != null ? ((Number) row[6]).intValue() : 0;
 
-            LoanStatus status;
-            try {
-                status = LoanStatus.valueOf(statusValue);
-            } catch (IllegalArgumentException e) {
-                // Ignorar ou logar status inválidos
-                continue;
+            LoanStatus status = null;
+            if (statusValue != null) {
+                try {
+                    status = LoanStatus.valueOf(statusValue);
+                } catch (IllegalArgumentException e) {
+                    // Ignorar status inválidos
+                    continue;
+                }
             }
 
             // Busca ou cria o DTO do componente
@@ -143,12 +145,14 @@ public class LoanComponentService {
                     new ComponentWithLoanDetailsDTO(componentId, name, serialNumber, description, totalQuantity));
 
             // Atualiza os valores baseados no status
-            switch (status) {
-                case PENDING_AUTHORIZATION -> dto.setRequestedQuantity(dto.getRequestedQuantity() + quantity);
-                case APPROVED -> dto.setAuthorizedQuantity(dto.getAuthorizedQuantity() + quantity);
-                case IN_PROGRESS -> dto.setBorrowedQuantity(dto.getBorrowedQuantity() + quantity);
-                default -> {
-                    // Outros status são ignorados no cálculo atual
+            if (status != null) {
+                switch (status) {
+                    case PENDING_AUTHORIZATION -> dto.setRequestedQuantity(dto.getRequestedQuantity() + quantity);
+                    case APPROVED -> dto.setAuthorizedQuantity(dto.getAuthorizedQuantity() + quantity);
+                    case IN_PROGRESS -> dto.setBorrowedQuantity(dto.getBorrowedQuantity() + quantity);
+                    default -> {
+                        // Outros status são ignorados no cálculo atual
+                    }
                 }
             }
 
@@ -163,4 +167,5 @@ public class LoanComponentService {
         // Retorna a lista dos valores calculados
         return new ArrayList<>(componentMap.values());
     }
+
 }
