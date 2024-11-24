@@ -133,4 +133,31 @@ public class ForumService {
         ));
     }
 
+    @Transactional
+    public ForumResponseDTO updateForum(ForumUpdateDTO forumUpdateDTO) {
+        Forum forum = forumRepository.findById(forumUpdateDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Fórum não encontrado com o ID: " + forumUpdateDTO.getId()));
+
+        if (forumUpdateDTO.getTitle() != null && !forumUpdateDTO.getTitle().isBlank()) {
+            forum.setTitle(forumUpdateDTO.getTitle());
+        }
+        if (forumUpdateDTO.getDescription() != null && !forumUpdateDTO.getDescription().isBlank()) {
+            forum.setDescription(forumUpdateDTO.getDescription());
+        }
+        if (forumUpdateDTO.getCodeSnippet() != null) {
+            forum.setCodeSnippet(forumUpdateDTO.getCodeSnippet());
+        }
+        forum.setEditDate(new Date());
+        Forum updatedForum = forumRepository.save(forum);
+
+        return new ForumResponseDTO(
+                updatedForum.getId(),
+                updatedForum.getTitle(),
+                updatedForum.getDescription(),
+                updatedForum.getCodeSnippet(),
+                updatedForum.getStatus().name(),
+                updatedForum.getCreationDate()
+        );
+    }
+
 }

@@ -104,5 +104,9 @@ public class ForumController {
         return ResponseEntity.ok(result);
     }
 
-
+    @PutMapping("/update")
+    public ResponseEntity<ForumResponseDTO> updateForum(@RequestBody ForumUpdateDTO forumUpdateDTO) {
+        ForumResponseDTO responseDTO = forumService.updateForum(forumUpdateDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
 }
