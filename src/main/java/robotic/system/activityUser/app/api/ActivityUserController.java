@@ -94,7 +94,7 @@ public class ActivityUserController {
     public ResponseEntity<?> getActivityPhoto(@PathVariable UUID activityId) throws IOException {
         return activityPhotoByActivityService.getPhotoByActivityId(activityId);
     }
-    
+
     @DeleteMapping("/delete")
     public ResponseEntity<BulkDeleteService.BulkDeleteResult> deleteActivities(@RequestBody List<String> activityIds) {
         BulkDeleteService.BulkDeleteResult result = deleteActivityService.deleteActivitiesByIds(activityIds);
@@ -107,7 +107,7 @@ public class ActivityUserController {
             @PathVariable UUID userId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "100") int size) {
-    
+
         Page<ActivityUserDTO> activitiesPage = activityUserService.listActivitiesByUserId(userId, PageRequest.of(page, size));
         return ResponseEntity.ok(activitiesPage);
     }
@@ -137,6 +137,22 @@ public class ActivityUserController {
         Optional<ActivityWithCommentsDTO> activityWithComments = activityUserService.getActivityWithCommentsById(activityId);
         return activityWithComments.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
-    
+
+    @PatchMapping("/{activityId}")
+    public ResponseEntity<String> updateActivity(
+            @PathVariable UUID activityId,
+            @RequestBody Map<String, Object> updates) {
+        String activityTitle = (String) updates.get("activityTitle");
+        String activityDescription = (String) updates.get("activityDescription");
+        ActivityStatus activityStatus = updates.get("activityStatus") != null ?
+                ActivityStatus.valueOf((String) updates.get("activityStatus")) : null;
+        Integer timeSpent = updates.get("timeSpent") != null ?
+                (Integer) updates.get("timeSpent") : null;
+        Date endDate = updates.get("endDate") != null ?
+                new Date((Long) updates.get("endDate")) : null;
+
+        return activityUserService.updateActivity(activityId, activityTitle, activityDescription, activityStatus, timeSpent, endDate);
+    }
+
+
 }

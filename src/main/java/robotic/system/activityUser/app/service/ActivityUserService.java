@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
+import robotic.system.activityUser.domain.en.ActivityStatus;
 import robotic.system.activityUser.domain.model.ActivityUser;
 import robotic.system.activityUser.domain.model.Comment;
 import robotic.system.activityUser.repository.ActivityPhotoRepository;
@@ -206,9 +207,35 @@ public class ActivityUserService {
         }
         return Optional.empty();
     }
+    @Transactional
+    public ResponseEntity<String> updateActivity(UUID activityId, String activityTitle, String activityDescription,
+                                                 ActivityStatus activityStatus, Integer timeSpent, Date endDate) {
+        Optional<ActivityUser> activityUserOptional = activityUserRepository.findById(activityId);
 
+        if (activityUserOptional.isPresent()) {
+            ActivityUser activity = activityUserOptional.get();
 
-    
+            // Atualizar os campos fornecidos
+            if (activityTitle != null) {
+                activity.setActivityTitle(activityTitle);
+            }
+            if (activityDescription != null) {
+                activity.setActivityDescription(activityDescription);
+            }
+            if (activityStatus != null) {
+                activity.setActivityStatus(activityStatus);
+            }
+            if (timeSpent != null) {
+                activity.setTimeSpent(timeSpent);
+            }
+            if (endDate != null) {
+                activity.setEndDate(endDate);
+            }
 
-
+            activityUserRepository.save(activity);
+            return ResponseEntity.ok("Atividade atualizada com sucesso.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
