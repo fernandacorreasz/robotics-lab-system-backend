@@ -22,7 +22,7 @@ public class LoanRejectionService {
 
     @Transactional
     public LoanComponent rejectLoan(UUID loanId, String authorizerEmail) {
-        // Buscar empréstimo pelo ID
+
         Optional<LoanComponent> loanOpt = loanComponentRepository.findById(loanId);
         if (loanOpt.isEmpty()) {
             throw new IllegalArgumentException("Empréstimo não encontrado para o ID: " + loanId);
@@ -30,15 +30,12 @@ public class LoanRejectionService {
 
         LoanComponent loan = loanOpt.get();
 
-        // Validar status do empréstimo
         if (loan.getStatus() != LoanStatus.PENDING_AUTHORIZATION) {
             throw new IllegalStateException("Apenas empréstimos pendentes podem ser recusados.");
         }
 
-        // Alterar status para "REJECTED"
         loan.setStatus(LoanStatus.REJECTED);
 
-        // Atualizar e salvar o empréstimo no banco de dados
         return loanComponentRepository.save(loan);
     }
 }
