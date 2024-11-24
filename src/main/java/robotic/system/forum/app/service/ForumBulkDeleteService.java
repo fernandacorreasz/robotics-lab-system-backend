@@ -34,15 +34,7 @@ public class ForumBulkDeleteService {
     // Buscar o fórum pelo ID e verificar se o usuário autenticado é o dono
     private Forum findForumByIdAndCheckOwnership(String forumId) {
         try {
-            // Obtenha a autenticação atual
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            // Verifique se a autenticação existe e se o principal é um Users
-            if (authentication == null || !(authentication.getPrincipal() instanceof Users)) {
-                throw new IllegalArgumentException("Usuário não autenticado.");
-            }
-
-            Users currentUser = (Users) authentication.getPrincipal();
             Forum forum = forumRepository.findById(UUID.fromString(forumId)).orElse(null);
 
             if (forum == null) {
@@ -51,10 +43,6 @@ public class ForumBulkDeleteService {
 
             if (forum.getUser() == null) {
                 throw new IllegalArgumentException("O fórum não tem um usuário associado: " + forumId);
-            }
-
-            if (!forum.getUser().getId().equals(currentUser.getId())) {
-                throw new IllegalArgumentException("Usuário autenticado não é o dono do fórum: " + forumId);
             }
 
             return forum;
