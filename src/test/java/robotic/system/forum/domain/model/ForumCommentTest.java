@@ -11,31 +11,35 @@ import static org.junit.jupiter.api.Assertions.*;
 class ForumCommentTest {
 
     @Test
-    void testForumCommentConstructor() {
-        Users user = new Users();
+    void testForumCommentEntity() {
+        // Criar instância completa da classe
         Forum forum = new Forum();
-        String content = "This is a comment";
-        String codeSnippet = "int x = 0;";
+        Users user = new Users();
+        ForumComment comment = new ForumComment();
+
+        UUID id = UUID.randomUUID();
         Date creationDate = new Date();
         Date editDate = new Date();
 
-        ForumComment comment = new ForumComment();
-        comment.setId(UUID.randomUUID());
-        comment.setContent(content);
-        comment.setCodeSnippet(codeSnippet);
-        comment.setUser(user);
-        comment.setForum(forum);
+        // Configurar atributos
+        comment.setId(id);
+        comment.setContent("Test content");
+        comment.setCodeSnippet("Test code snippet");
         comment.setCreationDate(creationDate);
         comment.setEditDate(editDate);
         comment.setVoteCount(5);
+        comment.setForum(forum);
+        comment.setUser(user);
 
-        assertNotNull(comment.getId(), "ID should not be null");
-        assertEquals(content, comment.getContent(), "Content should match");
-        assertEquals(codeSnippet, comment.getCodeSnippet(), "Code snippet should match");
-        assertEquals(user, comment.getUser(), "User should match");
-        assertEquals(forum, comment.getForum(), "Forum should match");
-        assertEquals(creationDate, comment.getCreationDate(), "Creation date should match");
-        assertEquals(editDate, comment.getEditDate(), "Edit date should match");
-        assertEquals(5, comment.getVoteCount(), "Vote count should match");
+        // Validações
+        assertNotNull(comment);
+        assertEquals(id, comment.getId());
+        assertEquals("Test content", comment.getContent());
+        assertEquals("Test code snippet", comment.getCodeSnippet());
+        assertEquals(creationDate, comment.getCreationDate());
+        assertEquals(editDate, comment.getEditDate());
+        assertEquals(5, comment.getVoteCount());
+        assertEquals(forum, comment.getForum());
+        assertEquals(user, comment.getUser());
     }
 }
