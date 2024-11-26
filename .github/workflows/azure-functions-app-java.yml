@@ -48,6 +48,13 @@ jobs:
         PROD_HOST: ${{ secrets.PROD_HOST }}
         PROD_USER: ${{ secrets.PROD_USER }}
         PROD_PASSWORD: ${{ secrets.PROD_PASSWORD }}
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
+       sshpass -p "$PROD_PASSWORD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST "
+          export DB_URL=$DB_URL &&
+          export DB_USERNAME=$DB_USERNAME &&
+          export DB_PASSWORD=$DB_PASSWORD"
         sshpass -p "$PROD_PASSWORD" scp -o StrictHostKeyChecking=no robotics-lab-system-backend.tar $PROD_USER@$PROD_HOST:/tmp
         sshpass -p "$PROD_PASSWORD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST "docker load -i /tmp/robotics-lab-system-backend.tar && rm /tmp/robotics-lab-system-backend.tar && docker image prune -f && cd /home/$PROD_USER/projeto-tcc && docker-compose up -d $PROD_IMAGE_NAME"
