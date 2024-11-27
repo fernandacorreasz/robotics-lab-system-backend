@@ -30,10 +30,13 @@ jobs:
       env:
           PROD_TOKEN: ${{ secrets.PROD_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
         chmod +x ./mvnw
-        mvn clean install
-         mvn sonar:sonar \
+        mvn clean install -Dspring.datasource.url=$DB_URL -Dspring.datasource.username=$DB_USERNAME -Dspring.datasource.password=$DB_PASSWORD
+        mvn sonar:sonar \
             -Dsonar.projectKey=robotics_lab_system_backend \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$PROD_TOKEN
@@ -53,12 +56,4 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
         sshpass -p "$PROD_PASSWORD" scp -o StrictHostKeyChecking=no robotics-lab-system-backend.tar $PROD_USER@$PROD_HOST:/tmp
-        sshpass -p "$PROD_PASSWORD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST "
-          docker load -i /tmp/robotics-lab-system-backend.tar &&
-          rm /tmp/robotics-lab-system-backend.tar &&
-          docker image prune -f &&
-          cd /home/$PROD_USER/projeto-tcc &&
-          export DB_URL=$DB_URL &&
-          export DB_USERNAME=$DB_USERNAME &&
-          export DB_PASSWORD=$DB_PASSWORD &&
-          docker-compose up -d $PROD_IMAGE_NAME"
+        sshpass -p "$PROD_PASSWORD" ssh -o StrictHostKeyChecking=no $PROD_USER@$PROD_HOST" docker load -i /tmp/robotics-lab-system-backend.tar && rm /tmp/robotics-lab-system-backend.tar &&  docker image prune -f && cd /home/$PROD_USER/projeto-tcc && DB_URL=$DB_URL DB_USERNAME=$DB_USERNAME DB_PASSWORD=$DB_PASSWORD docker-compose up -d $PROD_IMAGE_NAME"
