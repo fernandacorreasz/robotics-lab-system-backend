@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
-import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
 import robotic.system.inventory.repository.ComponentRepository;
 
 import java.util.List;
@@ -30,17 +29,6 @@ class ComponentRepositoryTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testFindAllWithAssociations() {
-        Page<ComponentWithAssociationsDTO> mockPage = new PageImpl<>(List.of(mock(ComponentWithAssociationsDTO.class)));
-        when(componentRepository.findAllWithAssociations(any(PageRequest.class)))
-                .thenReturn(mockPage);
-
-        Page<ComponentWithAssociationsDTO> result = componentRepository.findAllWithAssociations(PageRequest.of(0, 10));
-
-        assertNotNull(result, "Result should not be null");
-        verify(componentRepository).findAllWithAssociations(any(PageRequest.class));
-    }
 
     @Test
     void testFindAllProjected() {

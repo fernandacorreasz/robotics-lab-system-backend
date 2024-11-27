@@ -1,5 +1,7 @@
 package robotic.system.inventory.domain;
 
+import robotic.system.inventory.domain.en.ComponentStatus;
+
 public class ComponentBuilder {
     protected String componentId;
     protected String name;
@@ -11,6 +13,9 @@ public class ComponentBuilder {
     protected String librarySuggestions;
     protected ComponentSubCategory subCategory;
     protected ComponentCategory category;
+    protected Integer defectiveQuantity = 0; 
+    protected Integer discardedQuantity = 0; 
+    protected ComponentStatus status = ComponentStatus.AVAILABLE; 
 
     public ComponentBuilder() {}
 
@@ -61,6 +66,21 @@ public class ComponentBuilder {
 
     public ComponentBuilder withCategory(ComponentCategory category) {
         this.category = category;
+        return this;
+    }
+    
+    public ComponentBuilder withDefectiveQuantity(Integer defectiveQuantity) {
+        this.defectiveQuantity = defectiveQuantity;
+        return this;
+    }
+
+    public ComponentBuilder withDiscardedQuantity(Integer discardedQuantity) {
+        this.discardedQuantity = discardedQuantity;
+        return this;
+    }
+
+    public ComponentBuilder withStatus(ComponentStatus status) {
+        this.status = status;
         return this;
     }
 

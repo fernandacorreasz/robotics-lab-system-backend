@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import robotic.system.inventory.domain.en.ComponentStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,13 +30,23 @@ public class Component {
     private Integer quantity;
 
     @Column(name = "tutorial_link")
-    private String tutorialLink; // Link do tutorial no YouTube
+    private String tutorialLink; 
 
     @Column(name = "project_ideas", columnDefinition = "TEXT")
-    private String projectIdeas; // Ideias de projetos
+    private String projectIdeas; 
 
     @Column(name = "library_suggestions", columnDefinition = "TEXT")
-    private String librarySuggestions; // Sugestões de bibliotecas
+    private String librarySuggestions; 
+
+    @Column(name = "defective_quantity")
+    private Integer defectiveQuantity = 0; 
+
+    @Column(name = "discarded_quantity")
+    private Integer discardedQuantity = 0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ComponentStatus status = ComponentStatus.AVAILABLE; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subCategoryId", referencedColumnName = "id")
@@ -55,6 +66,9 @@ public class Component {
         this.tutorialLink = builder.tutorialLink;
         this.projectIdeas = builder.projectIdeas;
         this.librarySuggestions = builder.librarySuggestions;
+        this.defectiveQuantity = builder.defectiveQuantity;
+        this.discardedQuantity = builder.discardedQuantity;
+        this.status = builder.status;
     }
 }
 

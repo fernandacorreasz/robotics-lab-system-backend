@@ -13,7 +13,9 @@ import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.ComponentSubCategory;
 import robotic.system.inventory.domain.dto.ComponentDTO;
 import robotic.system.inventory.domain.dto.ComponentResponseDTO;
+import robotic.system.inventory.domain.dto.ComponentWithAssociationLIst;
 import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
+import robotic.system.inventory.domain.en.ComponentStatus;
 import robotic.system.inventory.exception.ComponentValidationException;
 import robotic.system.inventory.exception.ValidationMessages;
 import robotic.system.inventory.repository.ComponentRepository;
@@ -62,9 +64,9 @@ public class ComponentService {
         return componentRepository.findAllProjected(pageable);
     }
 
-   public Page<ComponentWithAssociationsDTO> listComponentsWithAssociations(Pageable pageable) {
-        return componentRepository.findAllWithAssociations(pageable);
-    }
+  public Page<ComponentWithAssociationLIst> listComponentsWithAssociations(Pageable pageable) {
+    return componentRepository.findAllWithAssociations(pageable);
+  }
 
     @Transactional
     public List<ComponentResponseDTO> createComponents(List<Component> components) throws ComponentValidationException {
@@ -172,42 +174,69 @@ public Page<ComponentWithAssociationsDTO> filterComponents(List<FilterRequest> f
         );
     }
 
-
-    public Component updateComponent(UUID id, Map<String, Object> updates) {
-        Component component = componentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Component not found"));
-        updates.forEach((key, value) -> {
-            switch (key) {
-                case "name":
-                    component.setName((String) value);
-                    break;
-                case "serialNumber":
-                    component.setSerialNumber((String) value);
-                    break;
-                case "description":
-                    component.setDescription((String) value);
-                    break;
-                case "quantity":
-                    component.setQuantity((Integer) value);
-                    break;
-                case "subCategoryId":
-                    // Se a subCategoria for atualizada, buscar a subCategoria correspondente
-                    if (value != null) {
-                        UUID subCategoryId = UUID.fromString((String) value);
-                        ComponentSubCategory subCategory = componentSubCategoryRepository.findById(subCategoryId)
-                                .orElseThrow(() -> new RuntimeException("SubCategory not found"));
-                        component.setSubCategory(subCategory);
-                    } else {
-                        component.setSubCategory(null);
+public Component updateComponent(UUID id, Map<String, Object> updates) {
+    Component component = componentRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Component not found"));
+    updates.forEach((key, value) -> {
+        switch (key) {
+            case "name":
+                component.setName((String) value);
+                break;
+            case "serialNumber":
+                component.setSerialNumber((String) value);
+                break;
+            case "description":
+                component.setDescription((String) value);
+                break;
+            case "quantity":
+                component.setQuantity((Integer) value);
+                break;
+            case "subCategoryId":
+                if (value != null) {
+                    UUID subCategoryId = UUID.fromString((String) value);
+                    ComponentSubCategory subCategory = componentSubCategoryRepository.findById(subCategoryId)
+                            .orElseThrow(() -> new RuntimeException("SubCategory not found"));
+                    component.setSubCategory(subCategory);
+                } else {
+                    component.setSubCategory(null);
+                }
+                break;
+            case "tutorialLink":
+                component.setTutorialLink(value != null ? (String) value : null);
+                break;
+            case "projectIdeas":
+                component.setProjectIdeas(value != null ? (String) value : null);
+                break;
+            case "librarySuggestions":
+                component.setLibrarySuggestions(value != null ? (String) value : null);
+                break;
+            case "defectiveQuantity":
+                component.setDefectiveQuantity((Integer) value);
+                break;
+            case "discardedQuantity":
+                Integer newDiscardedQuantity = (Integer) value;
+                int deltaDiscarded = newDiscardedQuantity - component.getDiscardedQuantity();
+                if (deltaDiscarded > 0) {
+                    int updatedQuantity = component.getQuantity() - deltaDiscarded;
+                    if (updatedQuantity < 0) {
+                        throw new IllegalArgumentException("Quantidade descartada excede a quantidade disponível.");
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Campo " + key + " não é válido para atualização.");
-            }
-        });
+                    component.setQuantity(updatedQuantity);
+                }
+                component.setDiscardedQuantity(newDiscardedQuantity);
+                break;
+            case "status":
+                component.setStatus(ComponentStatus.valueOf((String) value));
+                break;
 
-        return componentRepository.save(component);
-    }
+            default:
+                throw new IllegalArgumentException("Campo " + key + " não é válido para atualização.");
+        }
+    });
+
+    return componentRepository.save(component);
+}
+
 
 
     @Transactional

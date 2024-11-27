@@ -12,6 +12,7 @@ import robotic.system.inventory.app.service.ComponentService;
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
 import robotic.system.inventory.domain.dto.ComponentResponseDTO;
+import robotic.system.inventory.domain.dto.ComponentWithAssociationLIst;
 import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
 import robotic.system.inventory.exception.ComponentValidationException;
 import robotic.system.util.csv.CsvBulkUploadUtil;
@@ -62,11 +63,11 @@ public class ComponentController {
     }
 
     @GetMapping("/all-with-associations")
-    public ResponseEntity<Page<ComponentWithAssociationsDTO>> getFindAllComponentsWithAssociations(
+    public ResponseEntity<Page<ComponentWithAssociationLIst>> getFindAllComponentsWithAssociations(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        Page<ComponentWithAssociationsDTO> componentsPage = componentService
+        Page<ComponentWithAssociationLIst> componentsPage = componentService
                 .listComponentsWithAssociations(PageRequest.of(page, size));
         return ResponseEntity.ok(componentsPage);
     }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import robotic.system.inventory.domain.Component;
 import robotic.system.inventory.domain.dto.ComponentDTO;
-import robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO;
+import robotic.system.inventory.domain.dto.ComponentWithAssociationLIst;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,14 +15,15 @@ import java.util.UUID;
 
 public interface ComponentRepository extends JpaRepository<Component, UUID>, JpaSpecificationExecutor<Component> {
 
-    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationsDTO(" +
-            "c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, " +
-            "c.tutorialLink, c.projectIdeas, c.librarySuggestions, " +
-            "sc.id, sc.subCategoryName, cat.id, cat.categoryName) " +
-            "FROM Component c " +
-            "LEFT JOIN c.subCategory sc " +
-            "LEFT JOIN sc.category cat")
-    Page<ComponentWithAssociationsDTO> findAllWithAssociations(Pageable pageable);
+    @Query("SELECT new robotic.system.inventory.domain.dto.ComponentWithAssociationLIst(" +
+    "c.id, c.componentId, c.name, c.serialNumber, c.description, c.quantity, " +
+    "c.tutorialLink, c.projectIdeas, c.librarySuggestions, " +
+    "c.defectiveQuantity, c.discardedQuantity, CAST(c.status AS string), " +
+    "sc.id, sc.subCategoryName, cat.id, cat.categoryName) " +
+    "FROM Component c " +
+    "LEFT JOIN c.subCategory sc " +
+    "LEFT JOIN sc.category cat")
+   Page<ComponentWithAssociationLIst> findAllWithAssociations(Pageable pageable);
 
     @Query("SELECT c.id as id, c.componentId as componentId, c.name as name, c.serialNumber as serialNumber, c.description as description, c.quantity as quantity FROM Component c")
     Page<ComponentDTO> findAllProjected(Pageable pageable);
