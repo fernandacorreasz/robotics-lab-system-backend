@@ -26,17 +26,29 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
         
-    - name: Build with Maven
+ # Passo 1: Build para SonarQube sem variáveis do banco de dados
+    - name: SonarQube Analysis
       env:
           PROD_TOKEN: ${{ secrets.PROD_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       run: |
         chmod +x ./mvnw
-        mvn clean install
-         mvn sonar:sonar \
+        mvn clean install -DskipTests
+        mvn sonar:sonar \
             -Dsonar.projectKey=robotics_lab_system_backend \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$PROD_TOKEN
+
+    # Passo 2: Build com as variáveis do banco para gerar o artefato final
+    - name: Build with Database Variables
+      env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      run: |
+        chmod +x ./mvnw
+        mvn clean install
+  
     - name: Build Docker image
       run: |
         docker build -t robotics-lab-system-backend:latest .
