@@ -29,8 +29,8 @@ A aplicação está configurada para utilizar Spring Security com JWT para prote
 
 ## Acesso à aplicação
 
-- **Frontend em execução:** [http://4.196.97.77:5173/](http://4.196.97.77:5173/)
-- **Documentação da API:** [http://4.196.97.77:9002/swagger-ui/index.html#/](http://4.196.97.77:9002/swagger-ui/index.html#/)
+- **Frontend em execução:** disponibilzar após a banca
+- **Documentação da API:** disponibilzar após a banca
 
 ---
 
