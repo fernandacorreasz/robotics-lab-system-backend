@@ -29,7 +29,7 @@ A aplicação está configurada para utilizar Spring Security com JWT para prote
 
 ## Acesso à aplicação
 
-- **Frontend em execução:** disponibilzar após a banca
+- **Frontend em execução:** https://robotics-lab-system.vercel.app/
 - **Documentação da API:** disponibilzar após a banca
 
 ---
