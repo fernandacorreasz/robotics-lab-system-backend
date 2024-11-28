@@ -1,59 +1,38 @@
-# robotics-lab-system-backend
-Essa aplicação  é um sistema de  controle  desenvolvido de forma didática para praticas do desenvolvimento de software e como entrega de portfólio acadêmico.  Este sistema foi projetado com o propósito de simplificar o controle de equipamentos, atividades, gerenciamento  de um laboratório de robótica, está sendo desenvolvido em Java utilizando Spring Boot. A aplicação, o banco de dados e outros serviços necessários estão orquestrados utilizando Docker Compose.
 
-**Tecnologias Utilizadas:**
+# 🤖 Robotics Lab System
+Este é um sistema de controle desenvolvido de forma didática, com foco no gerenciamento de um laboratório de robótica. Ele visa simplificar o controle de equipamentos, atividades e fluxos administrativos, sendo também uma entrega de portfólio acadêmico para a formação em Engenharia de Software. 📚🎓
 
-- **Java**
-- **Spring Boot**
-- **Docker**
-- **Docker Compose**
-- **PostgreSQL**
-- **Flyway**
-- **Spring Security e JWT**
-- **Swagger**
+https://github.com/user-attachments/assets/9fea6bcc-2783-4c7b-9e71-77122846638d
 
----
-A aplicação está configurada para utilizar Spring Security com JWT para proteger os endpoints e controlar o acesso baseado em permissões.
 
-- **Autenticação e Autorização**: O projeto utiliza Spring Security e JWT para autenticação e autorização. Usuários podem se registrar e fazer login para receber um token JWT, que deve ser usado para acessar endpoints protegidos.
-- **Migrações de Banco de Dados**: Utilizamos Flyway para gerenciar as migrações de banco de dados.
-- **Documentação da API**: A documentação da API é gerada automaticamente utilizando Swagger para visualizar e testar os endpoints da API diretamente no navegador.
-- **Testes**: Os testes unitários foram implementados utilizando JUnit e Mockito.
-
----
-
-## Repositórios
+## 📂 Repositórios
 
 - **Frontend:** [robotics-lab-system-frontend-Two](https://github.com/fernandacorreasz/robotics-lab-system-frontend-Two)
 - **Backend:** [robotics-lab-system-backend](https://github.com/fernandacorreasz/robotics-lab-system-backend)
 
-## Acesso à aplicação
+## 🌐 Acesso à Aplicação
 
-- **Frontend em execução:** https://robotics-lab-system.vercel.app/
-- **Documentação da API:** disponibilzar após a banca
+- **Frontend em execução:** https://robotics-lab-system.vercel.app/ 
 
 ---
+## 📚 Documentação Completa
+📖 A documentação detalhada do projeto está disponível na 📘[ Wiki do Repositório](https://github.com/fernandacorreasz/robotics-lab-system-backend/wiki)
+Nela você encontra informações sobre:
 
-## Tecnologias Utilizadas
+- ⚙️ Especificações técnicas do sistema.
+- 📄 Documentação detalhada da aplicação.
+- 🖥️ Instruções para rodar o backend localmente.
+- 🔗 Modelagem de dados.
 
-### Backend
-- **Linguagem:** Java
-- **Framework:** Spring Boot
-- **Autenticação:** Spring Security com JWT
-- **Gerenciamento de Banco de Dados:** Flyway e PostgreSQL
-- **Containerização:** Docker e Docker Compose
-- **Documentação:** Swagger
-- **Testes:** JUnit e Mockito
 
-### Frontend
-- **Linguagem:** TypeScript
-- **Framework:** React
-- **Gerenciamento de Pacotes:** npm
-- **Ambiente de Desenvolvimento:** Node.js
-- **Estado atual:** Sem testes implementados
 
+##  🎯 Objetivo do Projeto:
+O Robotics Lab System foi desenvolvido com o propósito de otimizar a gestão de laboratórios acadêmicos, focando no gerenciamento de componentes eletrônicos, monitoramento de atividades e suporte ao aprendizado dos estudantes
 
 ## Vídeo Explicativo
 
 Um vídeo demonstrativo está sendo preparado para explicar as funcionalidades da aplicação. Assim que finalizado, será disponibilizado neste repositório.
+
+
+
 
