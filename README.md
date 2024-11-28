@@ -29,10 +29,18 @@ Nela você encontra informações sobre:
 ##  🎯 Objetivo do Projeto:
 O Robotics Lab System foi desenvolvido com o propósito de otimizar a gestão de laboratórios acadêmicos, focando no gerenciamento de componentes eletrônicos, monitoramento de atividades e suporte ao aprendizado dos estudantes
 
-## Vídeo Explicativo
+##🎥 Vídeo Explicativo
+O vídeo demonstrativo das funcionalidades do Robotics Lab System foi dividido em duas partes devido à duração máxima permitida pelo youtube.
 
-Um vídeo demonstrativo está sendo preparado para explicar as funcionalidades da aplicação. Assim que finalizado, será disponibilizado neste repositório.
+Confira abaixo:
 
+🎥Parte 01
+Demonstração do Sistema - Parte 01
+🔗 Acesse o vídeo: [Parte 01 - Apresentação Projeto de Seminário - Robotics Lab System](https://youtu.be/-v_-LKkQTr0?si=HEPQ0_sq6Kf4mGfJ)
 
+---
+🎥Parte 02
+Demonstração do Sistema - Parte 02
+🔗 Acesse o vídeo: [Parte 02 - Apresentação Projeto de Seminário - Robotics Lab System](https://youtu.be/kGEZRAEpGfg?si=aPpujvsLOLbXwYz9)
 
-
+![Vídeo sem título ‐ Feito com o Clipchamp](https://github.com/user-attachments/assets/e7bc2924-dc5a-4638-919b-eb837c0a86da)
