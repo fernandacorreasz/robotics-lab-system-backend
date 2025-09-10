@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")
+    @Value("${api.security.token.secret:dev-local-secret}")
     private String secret;
 
     public String generateToken(Users user) {
